@@ -10,7 +10,7 @@ import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
 /**
- * Created by yangqj on 2017/4/30. 启动命令 redis-server redis.windows.conf
+ * Created by yangqj on 2017/4/30. 启动命令 redis-server redis.windows.conf  配置git https://www.cnblogs.com/mei0619/p/8260696.html
  */
 @Configuration
 @EnableCaching
