@@ -8,6 +8,7 @@
     <link rel="stylesheet" th:href="@{/css/matrix-style.css}" />
     <link rel="stylesheet" th:href="@{/css/matrix-media.css}" />
     <link th:href="@{/font-awesome/css/font-awesome.css}" rel="stylesheet" />
+    <link rel="stylesheet" th:href="@{/layui-2.4.3/css/layui.css?now=2}"/>
     <title>作品管理</title>
 </head>
 <body>
@@ -144,6 +145,133 @@
 <script th:src="@{/js/jquery.dataTables.min.js}"></script>
 <script th:src="@{/js/layer.js}"></script>
 <script type="text/javascript">
+
+    var table = null;
+    var currId=null;
+
+    layui.use('table', function () {
+        table = layui.table;
+        //第一个实例
+        table.render({
+            elem: '#examain'
+            , url: '/admin/aggregation/allList',
+            id: 'testReload'
+            , cols: [
+                [
+                    {
+                        field: '', title: '合辑标题', sort: false,templet: function (d) {
+                            if (d.title != null) {
+                                return d.title;
+                            } else {
+                                return '';
+                            }
+                        }
+                    },
+                    {
+                        field: '', title: '合辑分类', sort: false,templet: function (d) {
+                            if (d.classification != null) {
+                                return d.classification;
+                            } else {
+                                return '';
+                            }
+                        }
+                    },
+                    {
+                        field: '', title: '平均分', sort: false,templet: function (d) {
+                            if (d.averageScore != null && d.averageScore!=-1) {
+                                //判断当前人是否是评分人员
+                                if(d.isRater==null ||d.isRater==0 ){
+                                    return d.averageScore +'<a href="/admin/aggregation/score?id=' + d.id + '" class="btn-1"><font color="#6495ed" size="3">查看明细</font></a>';
+                                }else {
+                                    return d.averageScore +'<a href="/admin/aggregation/scoreEdit?id=' + d.id + '" class="btn-1"><font color="#6495ed" size="3">查看明细</font></a>';
+                                }
+
+                            } else {
+                                if(d.isRater==null ||d.isRater==0 ){
+                                    return "待评分 "+'<a href="/admin/aggregation/score?id=' + d.id + '" class="btn-1"><font color="#6495ed" size="3">查看明细</font></a>';
+                                }else {
+                                    return "待评分 "+'<a href="/admin/aggregation/scoreEdit?id=' + d.id + '" class="btn-1"><font color="#6495ed" size="3">查看明细</font></a>';
+                                }
+
+                            }
+                        }
+                    },
+                    {
+                        field: '', title: '学习人数', sort: false, templet: function (d) {
+                            if (d.classification != null) {
+                                return d.studyNumber +"  <font color=\"#6495ed\" size=\"3\" onclick='onclickSet("+d.id+")'>设置</font>";
+                            } else {
+                                return 0 +" <font color=\"#6495ed\" size=\"3\" onclick='onclickSet("+d.id+")'>设置</font>";
+                            }
+                        }
+                    },
+                    {
+                        field: 'id', title: '阅读PV', sort: false, templet: function (d) {
+                            if (d.pv != "") {
+                                return d.pv;
+                            } else {
+                                return 0;
+                            }
+                        }
+                    },
+
+                    {
+                        field: 'id', title: '阅读UV', sort: false, templet: function (d) {
+                            if (d.uv != "") {
+                                return d.uv;
+                            } else {
+                                return 0;
+                            }
+                        }
+                    },
+                    {
+                        field: '', title: '最后编辑时间', sort: true, templet: function (d) {
+                            var timeStr="";
+                            if (d.updateTime != null) {
+                                timeStr=d.updateTime
+                            } else  if (d.createTime != null) {
+                                timeStr=d.createTime
+                            }
+                            return timeStr.replace(new RegExp("T",("gm"))," ").substr(0,timeStr.length>=19?19:timeStr.length);
+                        }
+                    },{
+                    field: '', title: '创建时间', sort: true, templet: function (d) {
+                        var timeStr="";
+                        if (d.createTime != null) {
+                            timeStr=d.createTime;
+                        }
+                        return timeStr.replace(new RegExp("T",("gm"))," ").substr(0,timeStr.length>=19?19:timeStr.length);
+                    }
+                }
+                    ,
+                    {
+                        field: '', title: '操作', sort: false, fixed: 'right',  templet: function (d) {
+                            return '<a href="javascript:;" onclick="edit('+d.id+')" class="btn-1"><font color="#6495ed" size="3">编辑</font></a>&nbsp;|&nbsp;<a href="javascript:;" onclick="del(' + d.id + ')" class="btn-1"><font color="#f6748e" size="3">删除</font></a>';
+                        }
+                    }
+                ]
+            ],
+            page: true
+        });
+    });
+
+    Date.prototype.Format = function (fmt) { //author: meizz
+        var o = {
+            "M+": this.getMonth() + 1, //月份
+            "d+": this.getDate(), //日
+            "h+": this.getHours(), //小时
+            "m+": this.getMinutes(), //分
+            "s+": this.getSeconds(), //秒
+            "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+            "S": this.getMilliseconds() //毫秒
+        };
+        if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+        for (var k in o)
+            if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+        return fmt;
+    }
+
+
     var table;
     $(".checkall").click(function () {
         var check = $(this).prop("checked");
