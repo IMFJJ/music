@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <meta charset="UTF-8">
+    <title>合辑管理</title>
+
+    <link rel="stylesheet" th:href="@{/adminEntry/css/ydxx_admin.css?now=2}">
+    <link rel="stylesheet" th:href="@{/adminEntry/css/baseFooterShare.css?now=2}"/>
+    <link rel="stylesheet" th:href="@{/adminEntry/layui/css/layui.css?now=2}"/>
+
+
+</head>
+
+<body>
+	<!--主体-->
+	<div class="ht-main">
+		<div class="ht-iframe">
+			<!--发表内容-->
+			<div class="ht-iframe-padding">
+				<div class="contentGl">
+					<div class="contentGl-tab">
+						<a href="#" class="cur">合辑管理</a>
+						<a href="#" th:if="${daipinf == 1}">待评分</a>
+						<a href="#" th:if="${guangli == 1}">评分标准管理</a>
+					</div>
+					<div class="content">
+						<div class="nr">
+							<section class="ht-group">
+								<div class="ht-btn-div">
+									<a class="ht-normal-btn" href="/admin/aggregation/add">添加合辑</a>
+								</div>
+								<!--表格--合辑管理-->
+								<div class="ht-normal-table">
+									 <table id="examain" lay-filter="test"></table>
+								</div>
+							</section>
+						</div>
+						<div class="nr">
+							<section class="ht-group">
+								<!--表格--待评分-->
+								<div class="ht-normal-table">
+									<table id="raterTable" lay-filter="test"></table>
+								</div>
+							</section>
+						</div>
+						<div class="nr">
+							<section class="ht-group">
+								<div class="ht-btn-div">
+									<a class="ht-normal-btn" href="/admin/standard/table/add">添加</a>
+								</div>
+								<!--表格--评分标准管理-->
+								<div class="ht-normal-table">
+									<table id="standard" lay-filter="test"></table>
+								</div>
+							</section>
+						</div>						
+					</div>
+				</div>
+
+			</div>
+
+		</div>
+	</div>
+<!--主体-->
+<!--<div class="main">
+    <div class="iframe">
+        <div class="iframe-padding p40">
+            <div class="contentGl">
+                <a class="ydxx-btn-1 " style="margin: 20px 0 40px;" href="/admin/aggregation/add"><i>+</i>添加合辑</a>
+                <div class="content" style="overflow: auto;">
+                    <table id="examain" lay-filter="test"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>-->
+
+<!--删除共用弹窗-->
+<div class="dialog-delete delete">
+    <div class="mask"></div>
+    <div class="dialog-delete-main">
+        <p>确认要删除该合辑？</p>
+        <input TYPE="hidden" value="0" id="delId">
+        <div class="col-xs-12 p0">
+            <a href="javascript:;" onclick="" class="close btn-2" id="cancel">取消</a>
+            <a href="javascript:;" onclick="dodel()" class="close btn-1" id="delete">删除</a>
+        </div>
+    </div>
+</div>
+
+<!--设置弹框-->
+<div class="yd-modal yd-set-modal">
+    <div class="yd-modal-hide"></div>
+    <div class="yd-modal-dialog">
+        <div class="yd-modal-header">
+            <h2>设置学习人数</h2>
+            <span class="close"></span>
+        </div>
+        <div class="yd-modal-body">
+            <input class="normalInput" type="number" maxlength="30" placeholder="设置学习人数"  id="studyNumber">
+            <a id="imageBox-btn" class="ydxx-btn-1" href="javascript:;" onclick="sureSet()">确定</a>
+        </div>
+    </div>
+</div>
+
+</body>
+
+<script type="text/javascript" th:src="@{/adminEntry/js/jquery-1.8.3.min.js}"></script>
+<script type="text/javascript" th:src="@{/adminEntry/js/ydxx_admin.js}"></script>
+<script type="text/javascript" th:src="@{/adminEntry/layui/layui.js}"></script>
+<script th:inline="javascript">
+    var table = null;
+    var currId=null;
+
+    layui.use('table', function () {
+        table = layui.table;
+        //第一个实例
+        table.render({
+            elem: '#examain'
+            , url: '/admin/aggregation/allList',
+            id: 'testReload'
+            , cols: [
+                [
+                    {
+                        field: '', title: '合辑标题', sort: false,templet: function (d) {
+                            if (d.title != null) {
+                                return d.title;
+                            } else {
+                                return '';
+                            }
+                        }
+                    },
+                    {
+                        field: '', title: '合辑分类', sort: false,templet: function (d) {
+                            if (d.classification != null) {
+                                return d.classification;
+                            } else {
+                                return '';
+                            }
+                        }
+                    },
+                    {
+                        field: '', title: '平均分', sort: false,templet: function (d) {
+                            if (d.averageScore != null && d.averageScore!=-1) {
+                                //判断当前人是否是评分人员
+								if(d.isRater==null ||d.isRater==0 ){
+                                    return d.averageScore +'<a href="/admin/aggregation/score?id=' + d.id + '" class="btn-1"><font color="#6495ed" size="3">查看明细</font></a>';
+								}else {
+                                    return d.averageScore +'<a href="/admin/aggregation/scoreEdit?id=' + d.id + '" class="btn-1"><font color="#6495ed" size="3">查看明细</font></a>';
+								}
+
+                            } else {
+                                if(d.isRater==null ||d.isRater==0 ){
+                                    return "待评分 "+'<a href="/admin/aggregation/score?id=' + d.id + '" class="btn-1"><font color="#6495ed" size="3">查看明细</font></a>';
+                                }else {
+                                    return "待评分 "+'<a href="/admin/aggregation/scoreEdit?id=' + d.id + '" class="btn-1"><font color="#6495ed" size="3">查看明细</font></a>';
+								}
+
+                            }
+                        }
+                    },
+                    {
+                        field: '', title: '学习人数', sort: false, templet: function (d) {
+                            if (d.classification != null) {
+                                return d.studyNumber +"  <font color=\"#6495ed\" size=\"3\" onclick='onclickSet("+d.id+")'>设置</font>";
+                            } else {
+                                return 0 +" <font color=\"#6495ed\" size=\"3\" onclick='onclickSet("+d.id+")'>设置</font>";
+                            }
+                        }
+                    },
+                    {
+                        field: 'id', title: '阅读PV', sort: false, templet: function (d) {
+                            if (d.pv != "") {
+                                return d.pv;
+                            } else {
+                                return 0;
+                            }
+                        }
+                    },
+
+                    {
+                        field: 'id', title: '阅读UV', sort: false, templet: function (d) {
+                        if (d.uv != "") {
+                            return d.uv;
+                        } else {
+                            return 0;
+                        }
+                    }
+                    },
+                    {
+                        field: '', title: '最后编辑时间', sort: true, templet: function (d) {
+                            var timeStr="";
+                            if (d.updateTime != null) {
+                                timeStr=d.updateTime
+                            } else  if (d.createTime != null) {
+                                timeStr=d.createTime
+                            }
+                            return timeStr.replace(new RegExp("T",("gm"))," ").substr(0,timeStr.length>=19?19:timeStr.length);
+                        }
+                    },{
+                    field: '', title: '创建时间', sort: true, templet: function (d) {
+                        var timeStr="";
+                        if (d.createTime != null) {
+                            timeStr=d.createTime;
+                        }
+                        return timeStr.replace(new RegExp("T",("gm"))," ").substr(0,timeStr.length>=19?19:timeStr.length);
+                    }
+                }
+                    ,
+                    {
+                        field: '', title: '操作', sort: false, fixed: 'right',  templet: function (d) {
+                        return '<a href="javascript:;" onclick="edit('+d.id+')" class="btn-1"><font color="#6495ed" size="3">编辑</font></a>&nbsp;|&nbsp;<a href="javascript:;" onclick="del(' + d.id + ')" class="btn-1"><font color="#f6748e" size="3">删除</font></a>';
+                    }
+                    }
+                ]
+            ],
+            page: true
+        });
+    });
+
+    Date.prototype.Format = function (fmt) { //author: meizz
+        var o = {
+            "M+": this.getMonth() + 1, //月份
+            "d+": this.getDate(), //日
+            "h+": this.getHours(), //小时
+            "m+": this.getMinutes(), //分
+            "s+": this.getSeconds(), //秒
+            "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+            "S": this.getMilliseconds() //毫秒
+        };
+        if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+        for (var k in o)
+            if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+        return fmt;
+    }
+    function edit(id) {
+
+        $.post("/admin/aggregation/checkEditPermission", {
+            id: id
+        }, function (r) {
+            if (r.code == 1) {
+                window.location.href="/admin/aggregation/edit?id="+id;
+            } else if (r.code == 10086) {
+                layer.alert("您没有该操作权限!");
+            } else {
+                layer.alert("删除失败,请刷新后重试!");
+            }
+        },"json");
+    }
+    //删除
+    function del(id) {
+        $("#delId").val(id);
+        $(".delete").fadeIn(300);
+    }
+    function dodel() {
+        var id = $("#delId").val();
+        $.post("/admin/aggregation/del", {
+            id: id
+        }, function (r) {
+            if (r.code == 1) {
+                table.reload('testReload', {
+                    page: {
+                        curr: 1 //重新从第 1 页开始
+                    }
+                });
+            } else if (r.code == 10086) {
+                layer.alert("您没有该操作权限!");
+            } else {
+                layer.alert("删除失败,请刷新后重试!");
+            }
+        },"json");
+    }
+
+    function onclickSet(id) {
+        currId=id;
+        $(".yd-set-modal").addClass("show");//显示弹框，隐藏弹框$(".yd-set-modal").removeClass("show");
+    }
+    function sureSet() {
+        var studyNumber = $("#studyNumber").val();
+        $.post("/admin/aggregation/set", {
+            id: currId,
+            studyNumber:studyNumber
+        }, function (r) {
+            if (r.code == 1) {
+                table.reload('testReload', {
+                    page: {
+                        curr: 1 //重新从第 1 页开始
+                    }
+                });
+            } else if (r.code == 10086) {
+                layer.alert("您没有该操作权限!");
+            } else {
+                layer.alert("删除失败,请刷新后重试!");
+            }
+        },"json");
+        $(".yd-set-modal").removeClass("show");//显示弹框，隐藏弹框$(".yd-set-modal").removeClass("show");
+    }
+	//开始 待评分
+	var raterTable;
+    layui.use('table', function () {
+        raterTable = layui.table;
+        //第一个实例
+        raterTable.render({
+            elem: '#raterTable'
+            , url: '/admin/aggregation/raterList',
+            id: 'testReload'
+            ,
+            minWidth:200
+            , cols: [
+                [
+                    {
+                        field: '', title: '合辑标题', sort: false, templet: function (d) {
+                            if (d.title != null) {
+                                return d.title;
+                            } else {
+                                return '';
+                            }
+                        }
+                    },
+                    {
+                        field: '', title: '合辑分类', sort: false, templet: function (d) {
+                            if (d.classification != null) {
+                                return d.classification;
+                            } else {
+                                return '';
+                            }
+                        }
+                    },
+                    {
+                        field: '', title: '平均分', sort: false, templet: function (d) {
+                            if (d.averageScore != null && d.averageScore!=-1) {
+                                //判断当前人是否是评分人员
+                                if(d.isRater==null ||d.isRater==0 ){
+                                    return d.averageScore +'<a href="/admin/aggregation/score?id=' + d.id + '" class="btn-1"><font color="#6495ed" size="3">查看明细</font></a>';
+                                }else {
+                                    return d.averageScore +'<a href="/admin/aggregation/scoreEdit?id=' + d.id + '" class="btn-1"><font color="#6495ed" size="3">查看明细</font></a>';
+                                }
+
+                            } else {
+                                if(d.isRater==null ||d.isRater==0 ){
+                                    return "待评分 "+'<a href="/admin/aggregation/score?id=' + d.id + '" class="btn-1"><font color="#6495ed" size="3">查看明细</font></a>';
+                                }else {
+                                    return "待评分 "+'<a href="/admin/aggregation/scoreEdit?id=' + d.id + '" class="btn-1"><font color="#6495ed" size="3">查看明细</font></a>';
+                                }
+
+                            }
+                        }
+                    },
+                    {
+                        field: '', title: '学习人数', sort: false, templet: function (d) {
+                            if (d.classification != null) {
+                                return d.studyNumber +"  <font color=\"#6495ed\" size=\"3\" onclick='onclickSet("+d.id+")'>设置</font>";
+                            } else {
+                                return 0 +" <font color=\"#6495ed\" size=\"3\" onclick='onclickSet("+d.id+")'>设置</font>";
+                            }
+                        }
+                    },
+                    {
+                        field: 'id', title: '阅读PV', sort: false, templet: function (d) {
+                            if (d.pv != "") {
+                                return d.pv;
+                            } else {
+                                return 0;
+                            }
+                        }
+                    },
+                    {
+                        field: 'id', title: '阅读UV', sort: false, templet: function (d) {
+                            if (d.uv != "") {
+                                return d.uv;
+                            } else {
+                                return 0;
+                            }
+                        }
+                    },
+                    {
+                        field: '', title: '创建时间', sort: true, templet: function (d) {
+                            var timeStr="";
+                            if (d.createTime != null) {
+                                timeStr=new Date(d.createTime).Format("yyyy-MM-dd hh:mm");
+                            }
+                            return timeStr.replace(new RegExp("-",("gm")),"/"); ;
+                        }
+                    }
+                    , {
+                    field: '', title: '最后编辑时间', sort: true, templet: function (d) {
+                        var timeStr="";
+                        if (d.updateTime != null) {
+                            timeStr= new Date(d.updateTime).Format("yyyy-MM-dd hh:mm");
+                        } else  if (d.createTime != null) {
+                            timeStr=new Date(d.createTime).Format("yyyy-MM-dd hh:mm");
+                        }
+                        return timeStr.replace(new RegExp("-",("gm")),"/"); ;
+                    }
+                },
+                    {
+                        field: '', title: '操作', sort: false, fixed: 'right', templet: function (d) {
+                            return '<a href="/admin/aggregation/edit?id=' + d.id + '" class="btn-1"><font color="#6495ed" size="3">编辑</font></a>&nbsp;|&nbsp;<a href="javascript:;" onclick="del(' + d.id + ')" class="btn-1"><font color="#f6748e" size="3">删除</font></a>';
+                        }
+                    }
+                ]
+            ],
+            page: true
+        });
+    });
+	//结束 待评分
+    //开始 标准表
+	var standardTable;
+    layui.use('table', function () {
+        standardTable = layui.table;
+        //第一个实例
+        standardTable.render({
+            elem: '#standard'
+            , url: '/admin/standard/table/allList',
+            id: 'testReload'
+            ,
+            minWidth:180           
+            , cols: [
+                [
+                    {
+                        field: '', title: '标准', sort: false, templet: function (d) {
+                            if (d.name != null) {
+                                return d.name;
+                            } else {
+                                return '';
+                            }
+                        }
+                    },
+                    {
+                        field: '', title: '权重', sort: false, templet: function (d) {
+                            if (d.weight != null) {
+                                return d.weight;
+                            } else {
+                                return '';
+                            }
+                        }
+                    },
+                    {
+                        field: '', title: '操作', sort: false, fixed: 'right', templet: function (d) {
+                            return '<a href="javascript:;" onclick="delStandard(' + d.id + ')" class="btn-1"><font color="#f6748e" size="3">删除</font></a>';
+                        }
+                    }
+                ]
+            ],
+            page: true
+        });
+    });
+    function delStandard(id) {
+            if(confirm("是否删除评分标准?")) {
+                params={"id":id}
+                $.ajax({
+                    url:"/admin/standard/table/del",
+                    type:"post",
+                    data: params,
+                    success:function(data){
+                        console.log(data)
+                        showSuccess("删除成功");
+                        location.reload();
+                    }
+                });
+            }
+    }
+	//结束 标准表
+</script>
+
+</html>

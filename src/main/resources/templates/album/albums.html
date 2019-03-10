@@ -40,25 +40,10 @@
                         <button type="button" shiro:hasPermission="/resources/add" onclick="$('#resourcesModal').modal();" class="btn btn-info" style="float: right; margin-right: 1px;">发布</button>
                         <button type="button" shiro:hasPermission="/resources/delete" onclick="delById();" class="btn btn-info" style="float: right; margin-right: 1px;">删除</button>
                         </form>
-                    <table class="table table-bordered data-table" id="datatable" >
-                        <thead>
-                        <tr>
-                            <th>
-                                <input type="checkbox" class="checkall" />
-                            </th>
-                            <th>ID</th>
-                            <th>专辑类型</th>
-                            <th>专辑名称</th>
-                            <th>专辑版本</th>
-                            <th>发行日期</th>
-                            <th>语种</th>
-                            <th>风格</th>
-                            <th>描述</th>
-                            <th>封面图</th>
-                            <th>状态</th>
-                        </tr>
-                        </thead>
-                    </table>
+                    <!--表格--合辑管理-->
+                    <div class="ht-normal-table">
+                        <table id="examain" lay-filter="test"></table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -144,6 +129,7 @@
 <script th:src="@{/js/bootstrap.min.js}" th:sr></script>
 <script th:src="@{/js/jquery.dataTables.min.js}"></script>
 <script th:src="@{/js/layer.js}"></script>
+<script th:src="@{/layui-2.4.3/layui.js}"></script>
 <script type="text/javascript">
 
     var table = null;
@@ -154,7 +140,7 @@
         //第一个实例
         table.render({
             elem: '#examain'
-            , url: '/admin/aggregation/allList',
+            , url: 'album',
             id: 'testReload'
             , cols: [
                 [
@@ -166,83 +152,7 @@
                                 return '';
                             }
                         }
-                    },
-                    {
-                        field: '', title: '合辑分类', sort: false,templet: function (d) {
-                            if (d.classification != null) {
-                                return d.classification;
-                            } else {
-                                return '';
-                            }
-                        }
-                    },
-                    {
-                        field: '', title: '平均分', sort: false,templet: function (d) {
-                            if (d.averageScore != null && d.averageScore!=-1) {
-                                //判断当前人是否是评分人员
-                                if(d.isRater==null ||d.isRater==0 ){
-                                    return d.averageScore +'<a href="/admin/aggregation/score?id=' + d.id + '" class="btn-1"><font color="#6495ed" size="3">查看明细</font></a>';
-                                }else {
-                                    return d.averageScore +'<a href="/admin/aggregation/scoreEdit?id=' + d.id + '" class="btn-1"><font color="#6495ed" size="3">查看明细</font></a>';
-                                }
-
-                            } else {
-                                if(d.isRater==null ||d.isRater==0 ){
-                                    return "待评分 "+'<a href="/admin/aggregation/score?id=' + d.id + '" class="btn-1"><font color="#6495ed" size="3">查看明细</font></a>';
-                                }else {
-                                    return "待评分 "+'<a href="/admin/aggregation/scoreEdit?id=' + d.id + '" class="btn-1"><font color="#6495ed" size="3">查看明细</font></a>';
-                                }
-
-                            }
-                        }
-                    },
-                    {
-                        field: '', title: '学习人数', sort: false, templet: function (d) {
-                            if (d.classification != null) {
-                                return d.studyNumber +"  <font color=\"#6495ed\" size=\"3\" onclick='onclickSet("+d.id+")'>设置</font>";
-                            } else {
-                                return 0 +" <font color=\"#6495ed\" size=\"3\" onclick='onclickSet("+d.id+")'>设置</font>";
-                            }
-                        }
-                    },
-                    {
-                        field: 'id', title: '阅读PV', sort: false, templet: function (d) {
-                            if (d.pv != "") {
-                                return d.pv;
-                            } else {
-                                return 0;
-                            }
-                        }
-                    },
-
-                    {
-                        field: 'id', title: '阅读UV', sort: false, templet: function (d) {
-                            if (d.uv != "") {
-                                return d.uv;
-                            } else {
-                                return 0;
-                            }
-                        }
-                    },
-                    {
-                        field: '', title: '最后编辑时间', sort: true, templet: function (d) {
-                            var timeStr="";
-                            if (d.updateTime != null) {
-                                timeStr=d.updateTime
-                            } else  if (d.createTime != null) {
-                                timeStr=d.createTime
-                            }
-                            return timeStr.replace(new RegExp("T",("gm"))," ").substr(0,timeStr.length>=19?19:timeStr.length);
-                        }
-                    },{
-                    field: '', title: '创建时间', sort: true, templet: function (d) {
-                        var timeStr="";
-                        if (d.createTime != null) {
-                            timeStr=d.createTime;
-                        }
-                        return timeStr.replace(new RegExp("T",("gm"))," ").substr(0,timeStr.length>=19?19:timeStr.length);
                     }
-                }
                     ,
                     {
                         field: '', title: '操作', sort: false, fixed: 'right',  templet: function (d) {
@@ -272,93 +182,8 @@
     }
 
 
-    var table;
-    $(".checkall").click(function () {
-        var check = $(this).prop("checked");
-        $(".checkchild").prop("checked", check);
-    });
-    $(document).ready(function() {
-        table = $('#datatable').DataTable( {
-            "dom": '<"top"i>rt<"bottom"flp><"clear">',
-            "searching" : false,
-            "bJQueryUI": true,
-            "sPaginationType": "full_numbers",
-            "serverSide": true,//开启服务器模式，使用服务器端处理配置datatable
-            "processing": true,//开启读取服务器数据时显示正在加载中……特别是大数据量的时候，开启此功能比较好
-
-            "ajax": 'album',
-            "columns": [
-                {
-                    "sClass": "text-center",
-                    "data": "id",
-                    "render": function (data, type, full, meta) {
-                        return '<input type="checkbox"  class="checkchild"  value="' + data + '" />';
-                    },
-                    "bSortable": false
-                },
-                { "data": "id" },
-                { "data": "type" },
-                { "data": "name" },
-                { "data": "version" },
-                { "data": "publicTime" },
-                { "data": "languages" },
-                { "data": "style" },
-                { "data": "statement" },
-                { "data": "coverImage" },
-                { "data": "status" },
-            ],
-            columnDefs:[
-                { "orderable": false, "targets": 1 },
-                { "orderable": false,"render": function(data, type, row) {
-                        var type =new Array( " 专辑","EP/Single" ,"精选集", "合集"," 杂集");
-                        return type[data];
-                    }, "targets": 2 },
-                { "orderable": false, "targets": 3 },
-                { "orderable": false, "targets": 4,"render": function(data, type, row) {
-                        var type =new Array("现场版"," 伴奏版","录音室版" ,"混合版", "Demo及其他");
-                        return type[data];
-                    }
-                },
-                {
-                    "orderable": false,
-                    "render": function(data, type, row) {
-                        if(data==1){
-                            return "菜单";
-                        }else if(data==2){
-                            return "按钮";
-                        }else{
-                            return "其他";
-                        }
-                    },
-                    "targets": 5
-                },
-                { "orderable": false, "targets": 6,"render": function(data, type, row) {
-                        var type =new Array("华语"," 日语","韩语" ,"欧美", "其他");
-                        return type[data];
-                    }
-                 },
-                { "orderable": false, "targets": 7,"render": function(data, type, row) {
-                        var type =new Array("华语"," 日语","韩语" ,"欧美", "其他");
-                        return type[data];
-                    }},
-                { "orderable": false, "targets": 8 },
-                { "orderable": false, "targets": 9,"render": function(data, type, row) {
-                        return "<img src="+data+" style=\"height: 80px;width: 80px\" />";
-                    } },
-                { "orderable": false, "targets": 10,"render": function(data, type, row) {
-                        var type =new Array("删除"," 审核中","发布成功");
-                        return type[data];
-                    } }
-            ],
-
-        } );
 
 
-    } );
-
-    function search(){
-        table.ajax.reload();
-    }
 
     //添加用户
     function addResources() {
