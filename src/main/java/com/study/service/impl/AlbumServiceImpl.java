@@ -28,6 +28,11 @@ public class AlbumServiceImpl extends BaseService<Album> implements AlbumService
     }
 
     @Override
+    public List<Album> selectByPage(int start, int length) {
+        return null;
+    }
+
+    @Override
     public int save(Album entity) {
         return 0;
     }
