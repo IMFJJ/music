@@ -16,20 +16,13 @@ public class AlbumServiceImpl extends BaseService<Album> implements AlbumService
     AlbumMapper albumMapper;
 
     @Override
-    public PageInfo<Album> selectByPage(Album album, int start, int length) {
-        int page = start/length+1;
-        Example example = new Example(Album.class);
-        Example.Criteria criteria = example.createCriteria();
-        criteria.andNotEqualTo("status",0);
-        //分页查询
-        PageHelper.startPage(page, length);
-        List<Album> albumList = selectByExample(example);
-        return new PageInfo<>(albumList);
+    public List<Album> findByPage() {
+        return albumMapper.selectByPage();
     }
 
     @Override
-    public List<Album> selectByPage(int start, int length) {
-        return null;
+    public Integer findAllCount() {
+        return albumMapper.selectAllCount();
     }
 
     @Override

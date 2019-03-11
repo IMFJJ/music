@@ -6,20 +6,84 @@
       WARNING - @mbg.generated
     -->
     <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="type_id" jdbcType="VARCHAR" property="type" />
     <result column="name" jdbcType="VARCHAR" property="name" />
-    <result column="version" jdbcType="INTEGER" property="version" />
+    <result column="version_id" jdbcType="VARCHAR" property="version" />
     <result column="public_time" jdbcType="TIMESTAMP" property="publicTime" />
-    <result column="languages" jdbcType="INTEGER" property="languages" />
-    <result column="style" jdbcType="INTEGER" property="style" />
+    <result column="languages_id" jdbcType="INTEGER" property="languages" />
+    <result column="style_id" jdbcType="VARCHAR" property="style" />
     <result column="statement" jdbcType="VARCHAR" property="statement" />
     <result column="cover_image" jdbcType="VARCHAR" property="coverImage" />
     <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
     <result column="create_time" jdbcType="DATE" property="createTime" />
     <result column="update_time" jdbcType="DATE" property="updateTime" />
   </resultMap>
 
   <select id="selectByPage" resultMap="BaseResultMap">
-    select  * from  album a where
+       SELECT
+        a.id,
+        a.cover_image,
+        a.public_time,
+        a.statement,
+        a.`status`,
+     (
+            SELECT
+                mt.`name`
+            FROM
+                m_type mt
+            WHERE
+                id = a.type_id
+            AND mt.`status` = 1
+        ) AS type_id,
+        (
+            SELECT
+                mv.`name`
+            FROM
+                m_version mv
+            WHERE
+                mv.id = a.version_id
+            AND mv.`status` = 1
+        ) AS version_id,
+        (
+            SELECT
+                ml.`name`
+            FROM
+                m_languages ml
+            WHERE
+                ml.id = a.languages_id
+            AND ml.`status` = 1
+        ) AS languages_id,
+        (
+            SELECT
+                ms.`name`
+            FROM
+                m_style ms
+            WHERE
+                ms.id = a.style_id
+            AND ms.`status` = 1
+        )as style_id,
+        (
+            SELECT
+                u.username
+            FROM
+                `user` u
+            WHERE
+                u.id = a.user_id
+        ) AS username
+    FROM
+        album a
+    WHERE
+        STATUS = 1
+    ORDER BY a.create_time DESC
   </select>
+
+    <select id="selectAllCount" resultType="java.lang.Integer">
+         SELECT
+           count(1)
+        FROM
+            album a
+        WHERE
+            STATUS = 1
+    </select>
 </mapper>

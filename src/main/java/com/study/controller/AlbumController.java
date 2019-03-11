@@ -4,17 +4,13 @@ import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.study.model.Album;
-import com.study.model.User;
 import com.study.service.AlbumService;
+import javafx.beans.DefaultProperty;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpSession;
 import java.awt.print.Pageable;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,13 +21,12 @@ public class AlbumController {
     @Resource
     AlbumService albumService;
     @RequestMapping
-    public Map<String,Object> getAll(Album album, String draw,
-                                     @RequestParam(required = false, defaultValue = "1") int start,
-                                     @RequestParam(required = false, defaultValue = "10") int length){
+    public Map<String,Object> getAll(Album album,  Integer size, Integer limit){
         JSONObject jsonObject = new JSONObject();
-        PageInfo<Album> pageInfo = albumService.selectByPage(album, start, length);
-        jsonObject.put("count", pageInfo.getTotal());
-        jsonObject.put("data", pageInfo.getList());
+        PageHelper.startPage(size==null?1:size, limit == null ?10: limit);
+        List<Album> albumList = albumService.findByPage();
+        jsonObject.put("count", albumService.findAllCount());
+        jsonObject.put("data", albumList);
         jsonObject.put("code", 0);
         jsonObject.put("msg", "success");
         return jsonObject;

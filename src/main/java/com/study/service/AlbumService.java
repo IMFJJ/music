@@ -6,6 +6,8 @@ import com.study.model.Album;
 import java.util.List;
 
 public interface AlbumService extends IService<Album> {
-    PageInfo<Album> selectByPage(Album album, int start, int length);
-    List<Album> selectByPage(int start, int length);
+    //获取合辑分页列表
+    List<Album> findByPage();
+    //获取合辑总数
+   Integer findAllCount();
 }

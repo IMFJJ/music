@@ -4,6 +4,8 @@ import java.util.Date;
 import javax.persistence.*;
 
 public class Album {
+    @Transient
+    private String username;
     /**
      * 专辑id
      */
@@ -14,7 +16,8 @@ public class Album {
     /**
      * 专辑类型 专辑 EP/Single 精选集 合集 杂集
      */
-    private Integer type;
+    @Column(name = "type_id")
+    private String type;
 
     /**
      * 专辑名称
@@ -24,7 +27,8 @@ public class Album {
     /**
      * 专辑版本 现场版 伴奏版 录音室版 混合版 Demo及其他
      */
-    private Integer version;
+    @Column(name = "version_id")
+    private String version;
 
     /**
      * 发行日期
@@ -35,9 +39,11 @@ public class Album {
     /**
      * 语种 华语 日语 韩语 欧美 其他
      */
-    private Integer languages;
+    @Column(name = "languages_id")
+    private String languages;
 
-    private Integer style;
+    @Column(name = "style_id")
+    private String style ;
 
     private String statement;
 
@@ -53,6 +59,12 @@ public class Album {
     private Integer status;
 
     /**
+     * 发布用户的id
+     */
+    @Column(name = "user_id")
+    private Integer userId;
+
+    /**
      * 创建时间
      */
     @Column(name = "create_time")
@@ -63,6 +75,14 @@ public class Album {
      */
     @Column(name = "update_time")
     private Date updateTime;
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
     /**
      * 获取专辑id
@@ -82,107 +102,51 @@ public class Album {
         this.id = id;
     }
 
-    /**
-     * 获取专辑类型 专辑 EP/Single 精选集 合集 杂集
-     *
-     * @return type - 专辑类型 专辑 EP/Single 精选集 合集 杂集
-     */
-    public Integer getType() {
+    public String getType() {
         return type;
     }
 
-    /**
-     * 设置专辑类型 专辑 EP/Single 精选集 合集 杂集
-     *
-     * @param type 专辑类型 专辑 EP/Single 精选集 合集 杂集
-     */
-    public void setType(Integer type) {
+    public void setType(String type) {
         this.type = type;
     }
 
-    /**
-     * 获取专辑名称
-     *
-     * @return name - 专辑名称
-     */
     public String getName() {
         return name;
     }
 
-    /**
-     * 设置专辑名称
-     *
-     * @param name 专辑名称
-     */
     public void setName(String name) {
         this.name = name;
     }
 
-    /**
-     * 获取专辑版本 现场版 伴奏版 录音室版 混合版 Demo及其他
-     *
-     * @return version - 专辑版本 现场版 伴奏版 录音室版 混合版 Demo及其他
-     */
-    public Integer getVersion() {
+    public String getVersion() {
         return version;
     }
 
-    /**
-     * 设置专辑版本 现场版 伴奏版 录音室版 混合版 Demo及其他
-     *
-     * @param version 专辑版本 现场版 伴奏版 录音室版 混合版 Demo及其他
-     */
-    public void setVersion(Integer version) {
+    public void setVersion(String version) {
         this.version = version;
     }
 
-    /**
-     * 获取发行日期
-     *
-     * @return public_time - 发行日期
-     */
     public Date getPublicTime() {
         return publicTime;
     }
 
-    /**
-     * 设置发行日期
-     *
-     * @param publicTime 发行日期
-     */
     public void setPublicTime(Date publicTime) {
         this.publicTime = publicTime;
     }
 
-    /**
-     * 获取语种 华语 日语 韩语 欧美 其他
-     *
-     * @return languages - 语种 华语 日语 韩语 欧美 其他
-     */
-    public Integer getLanguages() {
+    public String getLanguages() {
         return languages;
     }
 
-    /**
-     * 设置语种 华语 日语 韩语 欧美 其他
-     *
-     * @param languages 语种 华语 日语 韩语 欧美 其他
-     */
-    public void setLanguages(Integer languages) {
+    public void setLanguages(String languages) {
         this.languages = languages;
     }
 
-    /**
-     * @return style
-     */
-    public Integer getStyle() {
+    public String getStyle() {
         return style;
     }
 
-    /**
-     * @param style
-     */
-    public void setStyle(Integer style) {
+    public void setStyle(String style) {
         this.style = style;
     }
 
@@ -234,6 +198,24 @@ public class Album {
      */
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    /**
+     * 获取发布用户的id
+     *
+     * @return user_id - 发布用户的id
+     */
+    public Integer getUserId() {
+        return userId;
+    }
+
+    /**
+     * 设置发布用户的id
+     *
+     * @param userId 发布用户的id
+     */
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
     /**
