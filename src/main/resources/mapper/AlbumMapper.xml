@@ -23,6 +23,7 @@
   <select id="selectByPage" resultMap="BaseResultMap">
        SELECT
         a.id,
+        a.name,
         a.cover_image,
         a.public_time,
         a.statement,
