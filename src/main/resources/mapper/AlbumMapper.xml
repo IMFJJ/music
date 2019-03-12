@@ -5,7 +5,9 @@
     <!--
       WARNING - @mbg.generated
     -->
+
     <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="music_count" jdbcType="INTEGER" property="musicCount" />
     <result column="type_id" jdbcType="VARCHAR" property="type" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="version_id" jdbcType="VARCHAR" property="version" />
@@ -21,8 +23,9 @@
   </resultMap>
 
   <select id="selectByPage" resultMap="BaseResultMap">
-       SELECT
+      SELECT
         a.id,
+        (SELECT count(1) FROM m_music mm WHERE  mm.album_id=a.id ) AS music_count,
         a.name,
         a.cover_image,
         a.public_time,

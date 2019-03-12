@@ -5,6 +5,8 @@ import javax.persistence.*;
 
 public class Album {
     @Transient
+    private  Integer musicCount;
+    @Transient
     private String username;
     /**
      * 专辑id
@@ -75,6 +77,14 @@ public class Album {
      */
     @Column(name = "update_time")
     private Date updateTime;
+
+    public Integer getMusicCount() {
+        return musicCount;
+    }
+
+    public void setMusicCount(Integer musicCount) {
+        this.musicCount = musicCount;
+    }
 
     public String getUsername() {
         return username;

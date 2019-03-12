@@ -157,23 +157,22 @@
                                 return '';
                             }
                         }
-                     } ,
-                    {
+                     }  ,{
+                    field: '', title: '歌曲数', sort: false,templet: function (d) {
+                        if (d.musicCount != null) {
+                            return d.musicCount;
+                          } else {
+                            return '';
+                        }
+                       }
+                    }
+                    , {
                         field: '', title: '专辑名称', sort: false,templet: function (d) {
                             if (d.name != null) {
                                     return d.name;
                                 } else {
                                     return '';
                                 }
-                        }
-                    }
-                    ,{
-                        field: '', title: '版本', sort: false,templet: function (d) {
-                            if (d.version != null) {
-                                return d.version;
-                            } else {
-                                return '';
-                            }
                         }
                     }
                     ,{
@@ -206,22 +205,35 @@
         });
     });
 
-    Date.prototype.Format = function (fmt) { //author: meizz
-        var o = {
-            "M+": this.getMonth() + 1, //月份
-            "d+": this.getDate(), //日
-            "h+": this.getHours(), //小时
-            "m+": this.getMinutes(), //分
-            "s+": this.getSeconds(), //秒
-            "q+": Math.floor((this.getMonth() + 3) / 3), //季度
-            "S": this.getMilliseconds() //毫秒
-        };
-        if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
-        for (var k in o)
-            if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
-        return fmt;
+    function del(obj) {
+        // var files = obj[0].files[0]
+        // var data = new FormData();
+        // data.append('file', files);
+        // $.ajax({
+        //     url: '/admin/upload/substance',
+        //     type: 'POST',
+        //     data: data,
+        //     cache: false,
+        //     processData: false,
+        //     contentType: false,
+        //     success: function (data) {
+        //         if (data.success) {
+        //             var img = $(".img");
+        //             img.css("background-image", "url(" + data.file_path + ")");
+        //             img.show();
+        //             layer.msg("上传成功！");
+        //         } else {
+        //             layer.msg("上传失败！");
+        //         }
+        //     }
+        // });
+        alert(obj)
     }
 
+    function  edit(obj) {
+        alert(obj)
+        
+    }
 
 
 
