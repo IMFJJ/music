@@ -177,20 +177,27 @@
                         }
                     }
                     ,{
-                        field: '', title: '专辑类型', sort: false,templet: function (d) {
-                            if (d.type != null) {
-                                return d.type;
-                            } else {
-                                return '';
-                            }
+                        field: '', title: '发行时间', sort: false,templet: function (d) {
+                        var timeStr="";
+                        if (d.publicTime != null) {
+                            timeStr=new Date(d.publicTime).Format("yyyy-MM-dd hh:mm");
+                        }
+                        return timeStr.replace(new RegExp("-",("gm")),"/"); ;
                         }
                     } ,
                     {
-                       field: '', title: '语种', sort: false,templet: function (d) {
-                            if (d.languages != null) {
+                       field: '', title: '状态', sort: false,templet: function (d) {
+                            if (d.status != null) {
+                                if(d.status==0){
+                                    return "已删除";
+                                }else if(d.status==1){
+                                    return "审核中";
+                                }else if(d.status==2){
+                                    return "上线";
+                                }
                                 return d.languages;
                             } else {
-                                return '';
+                                return '未知';
                             }
                         }
                     }
