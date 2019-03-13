@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+		<meta charset="UTF-8">
+		<title>修改合辑</title>
+		<link rel="stylesheet" th:href="@{/css/jquery.datetimepicker.css}">
+		<link rel="stylesheet" th:href="@{/adminEntry/css/ydxx_admin.css?now=3}">
+		<link rel="stylesheet" th:href="@{/adminEntry/css/baseFooterShare.css?now=3}"/>
+		<link rel="stylesheet" th:href="@{/adminEntry/css/baseFooterShare.css?now=3}"/>		
+	</head>
+
+	<body>
+		<!--主体-->
+		<div class="main">
+			<div class="iframe iframe-bj-2">
+				<!--内容管理-->
+				<div class="iframe-padding">
+					<div class="contentGl">
+						<div class="contentGl-tab">
+							<a href="#" class="cur">修改合辑</a>
+						</div>
+						<div class="content discover compilation">
+							<div class="nr">
+								<section class="mb30">
+									<h2>合辑分类</h2>
+									<div class="p0 col-xs-12">
+										<div class="select-div">
+											<div class="normal-select" style="width: 400px;">									
+												<select name="阿斯顿" size="1" id="classify">
+												</select>
+											</div>
+										</div>
+									</div>
+								</section>
+								<section>
+									<h2>合辑标题</h2>
+									<div class="p0 col-xs-12">
+										<input style="width: 400px;" class="normalInput" maxlength="30" placeholder="请填写你的标题" type="text" id="title" th:if="${yAggregation!=null}"  th:value="${yAggregation.title}"   >
+									</div>
+								</section>
+								<section>
+									<h2>合辑亮点(选填)</h2>
+                                <div class="p0 col-xs-12">
+                                    <textarea style="width: 400px;" name="" rows="" cols=""  id="strengthsContent" th:if="${yAggregation!=null}"  th:utext="${yAggregation.strengthsContent}" maxlength="100"></textarea>
+                                </div>
+                                </section>
+								<section>
+									<h2>合辑亮点图(选填)</h2>
+									<p class="hint">请上传小于2M的750px*420px图片，支持JPG\PNG（最多1张）</p>
+									<div class="p0 col-xs-12 img-cover">
+										<div tag="strengthsPathDiv">
+										  <span th:if="${yAggregation!=null && yAggregation.strengthsImage!=null}"
+												th:style="'background-image:' + 'url(' + ${yAggregation.strengthsImage} + ') '+ ''">
+										  </span><!--添加后图片路径传到里面-->
+										</div>
+										<label class="img-upload-btn" for="input-file-img2">
+											<input tag="strengthsPathInput" class="input-file-img2" id="input-file-img2" type="file"
+												   accept="image/jpeg,image/jpg,image/png">
+											<input tag="updateStrengthsPathInput" style="display: none;" class="input-file-img" type="file"
+												   accept="image/jpeg,image/jpg,image/png">
+										</label>
+									</div>
+								</section>
+								<section>
+									<h2>合辑介绍</h2>
+									<div class="p0 col-xs-12">
+										<textarea style="width: 400px;" name="" rows="" cols=""  id="aggregationContent" th:if="${yAggregation!=null}"  th:utext="${yAggregation.content}"></textarea>
+									</div>
+								</section>
+
+								<section>
+									<h2>合辑封面图</h2>
+									<p class="hint">请上传小于2M的750px*420px图片，支持JPG\PNG（最多1张）</p>
+									<div class="p0 col-xs-12 img-cover">
+										<div tag="coverPathDiv">
+									  <span th:if="${yAggregation!=null && yAggregation.coverImage!=null}"
+											th:style="'background-image:' + 'url(' + ${yAggregation.coverImage} + ') '+ ''">
+									  </span><!--添加后图片路径传到里面-->
+										</div>
+										<label class="img-upload-btn" for="input-file-img">
+											<input tag="coverPathInput" class="input-file-img" id="input-file-img" type="file"
+												   accept="image/jpeg,image/jpg,image/png">
+											<input tag="updateCoverPathInput" style="display: none;" class="input-file-img" type="file"
+												   accept="image/jpeg,image/jpg,image/png">
+										</label>
+									</div>
+								</section>
+
+								<section>
+									<!--克隆文章列表项-->
+									<div class="clone-item" style="display: none;">
+
+										<div class="sort" title="可拖动排序"><label>序号：</label><span>1</span></div>
+										<div class="search">
+											<label>文章：</label>
+											<input type="text" placeholder="请选择合辑文章" data-id="0" data-tutor="0"/>
+											<div class="search-box">
+											</div>
+										</div>
+										<div class="delete"><span>删除</span></div>
+									</div>
+									<h2>合辑文章</h2>
+									<div class="compilation-artcle">
+										<div id="sortable">
+											<div class="item">
+												<div class="sort" title="可拖动排序"><label>序号：</label><span>1</span></div>
+												<div class="search">
+													<label>文章：</label>
+													<input type="text" value=""  placeholder="请选择合辑文章" data-id="0" data-tutor="0"/>
+													<div class="search-box">
+
+													</div>
+												</div>
+												<div class="delete"><span>删除</span></div>
+											</div>
+											<div class="addItem"></div>
+										</div>
+										<div class="add-item">
+											<div class="sort add"><label>+</label></div>
+
+										</div>
+									</div>
+
+								</section>
+
+								<section>
+									<a class="ydxx-btn-1" id="sureAdd">保存</a>
+								</section>
+							</div>
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript" th:src="@{/adminEntry/js/jquery-2.1.4.min.js}"></script>
+	<script type="text/javascript" th:src="@{/adminEntry/js/cropbox-min.js}"></script>
+	<script type="text/javascript" th:src="@{/adminEntry/js/jquery-ui.min.js}"></script>
+	<script type="text/javascript" th:src="@{/adminEntry/js/ v.js}"></script>
+    <script charset="utf-8" type="text/javascript" th:src="@{/layer/js/layer.js}"></script>
+	<script>
+        //合辑封面
+        var coverPaths = "";
+        //亮点封面
+        var strengthsPaths = "";
+        //合辑分类
+		var classification;
+		if( [[${yAggregation.classificationId}]]!=null)
+		    classification=[[${yAggregation.classificationId}]];
+        //标题
+		var title;
+		//介绍
+        var content;
+        //介绍
+        var strengthsContent;
+        //文章的集合
+		var contentList=new Array();
+        //修改导师 num:导师集合下标 该方法要在外层
+		//是否点击了保存
+		var hasSureAdd=0;
+		$(function(){
+		    //初始化封面
+            setCoverPathSpanClick();
+            setCoverPathStatus();
+            setStrengthsPathSpanClick();
+            setStrengthsPathStatus()
+            getContentListById([[${yAggregation.id}]])
+		    //分类列表查询
+            $.ajax({
+                url: '/admin/classify/getAllList',
+                type: 'GET',
+                cache: false,
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                    data=data.data;
+                    var html = "";
+                    if(data==null || data.length==0){
+                        document.location.reload();//当前页面
+                    }
+                    for (var i = 0; i < data.length; i++) {
+                        var temp = data[i];
+                        if(temp.id==classification){
+                            html += "<option selected='selected' value=" + temp.id + " >" + temp.name + "</option>";
+						}else {
+                            html += "<option value=" + temp.id + ">" + temp.name + "</option>";
+						}
+                    }
+                    $("#classify").html(html);
+                }
+            });
+			//拖动排序
+			$( "#sortable" ).sortable({
+				handle: ".sort",
+				cancel: ".add-item,input,.search,.delete",
+				stop: function( event, ui ) {
+					updateSort()
+				}
+			});
+			//模糊搜索
+			$(document).on("keyup",".compilation-artcle .search input",function(){
+                //请求模糊查询
+                var str=$(this).val();
+                getListByLike($(this),str);
+                $(this).siblings(".search-box").css('display', 'block');
+                $(this).siblings(".search-box").children().css('display', 'block');
+			})
+			//选择搜索列表项
+			$(document).on("click",".search-box .search-item",function(e){
+				var _text = $(this).text();
+				var _data_id=$(this).attr("data-id");
+                var _data_tutor=$(this).attr("data-tutor");
+				e.stopPropagation();
+				$(this).parent().siblings("input").val(_text);
+                $(this).parent().siblings("input").attr("data-id",_data_id);
+                $(this).parent().siblings("input").attr("data-tutor",_data_tutor);
+				$(this).css('display', 'none');
+				$(this).parent().css('display', 'none');
+			})
+			//排序显示
+			$(document).on("click",".compilation-artcle .item",function(){
+				updateSort()
+			})
+			//添加文章
+			$(document).on("click",".compilation-artcle .add",function(){
+				var _html = $(".clone-item").clone();
+				_html.removeClass("clone-item").addClass("item");
+				_html.removeAttr("style","");
+				$(".addItem").before(_html);
+				updateSort()
+			})
+			//删除文章
+			$(document).on("click",".compilation-artcle .delete",function(){
+				$(this).parent().remove();
+			})
+			//阻止冒泡
+			$(document).on("click","body",function(){
+				$(".search-box,.search-item").css('display', 'none');
+			})
+			//更新排序
+			function updateSort(){
+				$(".compilation-artcle .item").each(function(){
+					$(this).find(".sort span").text($(this).index()+1)
+				})
+			}
+
+            $('input[tag="updateCoverPathInput"]').change(function () {
+                reqImg($(this), 1);
+            });
+            $('input[tag="updateStrengthsPathInput"]').change(function () {
+                reqImg2($(this), 1);
+            });
+            //已经够1张图片，不让添加，只能修改
+            function setCoverPathStatus() {
+                var coverPathList = $('div[tag="coverPathDiv"]').children();
+                console.log(coverPathList)
+                if (coverPathList.length >= 1) {
+                    $('input[tag="coverPathInput"]').parent().css('display', 'none');
+                }
+            }
+            //修改图片，记录下标
+            var coverPathImgIndex = -1;
+            function setCoverPathSpanClick() {
+                $('div[tag="coverPathDiv"]').children().each(function (i) {
+                    $(this).unbind('click');
+                    $(this).click(function () {
+                        coverPathImgIndex = i;
+                        $('input[tag="updateCoverPathInput"]').click();
+                    });
+                });
+            }
+
+
+            //已经够1张图片，不让添加，只能修改
+            function setStrengthsPathStatus() {
+                var strengthsPathList = $('div[tag="strengthsPathDiv"]').children();
+                if (strengthsPathList.length >= 1) {
+                    $('input[tag="strengthsPathInput"]').parent().css('display', 'none');
+                }
+            }
+            //修改图片，记录下标
+            var strengthsPathImgIndex = -1;
+            function setStrengthsPathSpanClick() {
+                $('div[tag="strengthsPathDiv"]').children().each(function (i) {
+                    $(this).unbind('click');
+                    $(this).click(function () {
+                        strengthsPathImgIndex = i;
+                        $('input[tag="updateStrengthsPathInput"]').click();
+                    });
+                });
+            }
+
+
+            //上传图片
+            $('input[tag="coverPathInput"]').change(function () {
+                reqImg($(this), 0);
+            });
+            //上传图片
+            $('input[tag="strengthsPathInput"]').change(function () {
+                reqImg2($(this), 0);
+            });
+
+            function reqImg(obj, type) {
+                var files = obj[0].files[0]
+                var isAllow=testMaxSize(files,1024*2*1024);
+                if(!isAllow){
+                    showError(" 图片大小超过2M限制！");
+                    return;
+                }
+                var data = new FormData();
+                data.append('file', files);
+                $.ajax({
+                    url: '/admin/upload/aggregation',
+                    type: 'POST',
+                    data: data,
+                    cache: false,
+                    processData: false,
+                    contentType: false,
+                    success: function (data) {
+                        if (type == 0) {
+                            //file置空
+                            var file = $('input[tag="coverPathInput"]')[0];
+                            file.value = '';
+                            // 新增
+                            var imgSpan = '<span style="background-image: url(' + data.file_path + ');"></span>';
+                            $('div[tag="coverPathDiv"]').append(imgSpan);
+                            setCoverPathStatus();
+                            setCoverPathSpanClick();
+                        } else {
+                            //file置空
+                            var file = $('input[tag="updateCoverPathInput"]')[0];
+                            file.value = '';
+                            // 修改
+                            var d = $('div[tag="coverPathDiv"]').children().eq(coverPathImgIndex);
+                            d.css('background-image', "url(" + data.file_path + ")");
+                            coverPathImgIndex = -1;
+                        }
+                    }
+                });
+            }
+            function reqImg2(obj, type) {
+                var files = obj[0].files[0]
+                var isAllow=testMaxSize(files,1024*2*1024);
+                if(!isAllow){
+                    showError(" 图片大小超过2M限制！");
+                    return;
+                }
+                var data = new FormData();
+                data.append('file', files);
+                $.ajax({
+                    url: '/admin/upload/aggregation',
+                    type: 'POST',
+                    data: data,
+                    cache: false,
+                    processData: false,
+                    contentType: false,
+                    success: function (data) {
+                        if (type == 0) {
+                            //file置空
+                            var file = $('input[tag="strengthsPathInput"]')[0];
+                            file.value = '';
+                            // 新增
+                            var imgSpan = '<span style="background-image: url(' + data.file_path + ');"></span>';
+                            $('div[tag="strengthsPathDiv"]').append(imgSpan);
+                            setStrengthsPathStatus();
+                            setStrengthsPathSpanClick();
+                        } else {
+                            //file置空
+                            var file = $('input[tag="updateStrengthsPathInput"]')[0];
+                            file.value = '';
+                            // 修改
+                            var d = $('div[tag="strengthsPathDiv"]').children().eq(strengthsPathImgIndex);
+                            d.css('background-image', "url(" + data.file_path + ")");
+                            strengthsPathImgIndex = -1;
+                        }
+                    }
+                });
+            }
+            //过滤相同的文章
+            for (var i=0;i<contentList.length;i++){
+                for (var j=i+1;j<contentList.length;j++){
+                    if(contentList[i][0]==contentList[j][0]){
+                        contentList.splice(j,1);
+                        j--;
+                    }
+                }
+            }
+            /**
+             *文件大小
+             * @param fileData
+             * @param Max_Size
+             * @returns {boolean}
+             */
+            function testMaxSize(fileData,Max_Size){
+                var isAllow=false;
+                var size = fileData.size;
+                isAllow = size <= Max_Size;
+                return isAllow;
+            }
+            //请求模糊查询
+            function getListByLike(obj,str) {
+                $.ajax({
+                    url: '/admin/content/getListByLike?str='+encodeURI(str),
+                    type: 'GET',
+                    cache: false,
+                    processData: false,
+                    contentType: false,
+                    success: function (data) {
+                        data=data.data;
+                        var html = "";
+                        for (var i = 0; i < data.length; i++) {
+                            var temp = data[i];
+                            html += "<div class=\"search-item\" style=\"display: block;\""+"data-id=\""+temp.id+"\""+" data-tutor=\""+temp.authorName+"\""+">"+temp.title+"</div>";
+                        }
+                        obj.siblings(".search-box").html(html)
+                    }
+                });
+            }
+            //初始化文章详情
+            function getContentListById(id) {
+                $.ajax({
+                    url: '/admin/aggregation/getContentListById?id='+id,
+                    type: 'GET',
+                    async: false,
+                    cache: false,
+                    processData: false,
+                    contentType: false,
+                    success: function (data) {
+                        data=data.data;
+                        console.log(data);
+                        var html="";
+                        for (var i=0 ;i<data.length;i++){
+                            var t=new Array();
+                            var d=data[i];
+                            j=i+1;
+                            html+="<div class=\"item\">";
+
+                            html+=" <div class=\"sort\"><label>序号：</label><span>"+j+"</span></div>";
+
+                            html+=" <div class=\"search\">";
+                            html+=" <label>文章：</label>";
+                            html+="<input type=\"text\" value=\""+d.title+"\" placeholder=\"请选择合辑文章\" data-id=\""+d.id+"\" data-tutor=\""+d.authorName+"\">";
+                            html+="<div class=\"search-box\" style=\"display: none;\"></div>";
+                            html+="</div>";
+
+							html+="<div class=\"delete\"><span>删除</span></div>";
+
+                            html+="</div>";
+
+                         // if(i==data.length-1){
+                         //
+						 // }
+
+                        }
+                        html+="<div class=\"addItem\"></div>";
+                        $("#sortable").html(html);
+                    }
+                });
+            }
+            //检查与校验
+			function check(){
+                classification=$("#classify").find("option:selected").val();
+                if(classification==null || classification==""){
+                    showError("请选择分类");
+                    return -1;
+				}
+                title=$("#title").val();
+                if(title==null || title==""){
+                    showError("请填写合辑标题");
+                    return -1;
+                }
+                content=$("#aggregationContent").val()
+                if(content==null || content==""){
+                    showError("请填写合辑介绍");
+                    return -1;
+                }
+
+                if(coverPaths==null || coverPaths==""){
+                    showError("请上传合辑封面");
+                    return -1;
+                }
+                if(contentList==null || contentList.length==0){
+                    showError("请选择文章!");
+                    return -1;
+                }
+			}
+			//提示出错
+			function showError(msg){
+				layer.alert(msg);
+			}
+            //保存
+            $("#sureAdd").click(function(){
+
+                contentList=new Array();
+				for (i=0;i<$("#sortable").children(".item").length;i++){
+					var c=$("#sortable").children(".item").eq(i).children(".search").children("input");
+					var contents=new Array();
+                    contents[0]=(c.attr("data-id"));
+                    contents[1]=(c.attr("data-tutor"));
+                    if( contents[0]!=0){
+                        contentList.push(contents);
+                    }
+				}
+                //封面图片
+                var coverPathList = $('div[tag="coverPathDiv"]').children();
+                var reg = new RegExp('"', 'g');
+                for (var i = 0; i < coverPathList.length; i++) {
+                    var value = $(coverPathList[i]).css("background-image").replace('url(', '').replace(')', '').replace(reg, '') + ",";
+                    if (value.indexOf('aggregation/edit') > -1) {
+                        continue;
+                    }
+                    coverPaths = value;
+                }
+                if (coverPaths.lastIndexOf(',') > 0) {
+                    coverPaths = coverPaths.substring(0, coverPaths.lastIndexOf(','));
+                }
+                //亮点图片
+                var strengthsPathList = $('div[tag="strengthsPathDiv"]').children();
+                var reg = new RegExp('"', 'g');
+                for (var i = 0; i < strengthsPathList.length; i++) {
+                    var value = $(strengthsPathList[i]).css("background-image").replace('url(', '').replace(')', '').replace(reg, '') + ",";
+                    if (value.indexOf('aggregation/edit') > -1) {
+                        continue;
+                    }
+                    strengthsPaths = value;
+                }
+                if (strengthsPaths.lastIndexOf(',') > 0) {
+                    strengthsPaths = strengthsPaths.substring(0, strengthsPaths.lastIndexOf(','));
+                }
+                //校验
+                if(check()==-1){
+                    return;
+				}
+                if(hasSureAdd==1){
+                    showError("请勿在重复点击保存");
+                    return;
+                }
+                hasSureAdd=1;
+                strengthsContent=$("#strengthsContent").val();
+				//保存到后台
+                var data={ classification:classification, title:title,content:content,strengthsContent:strengthsContent, coverImage:coverPaths,strengthsImage:strengthsPaths,contentList:JSON.stringify(contentList),updateId:[[${yAggregation.id}]]};
+                $.ajax({
+                    url: '/admin/aggregation/sureAdd',
+                    type: 'POST',
+                    data:data,
+                    success: function (d) {
+                        if (d.code==1){
+                            alert("修改成功");
+                            //跳转到
+							window.location.href="/admin/aggregation/index";
+						}else {
+                            alert("修改失败")
+						}
+                        hasSureAdd=0;
+                    }
+                });
+
+            })
+		})
+	</script>
+</html>
