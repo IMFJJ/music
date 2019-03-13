@@ -26,6 +26,12 @@ public class AlbumServiceImpl extends BaseService<Album> implements AlbumService
     }
 
     @Override
+    public Album findDetailById(Integer id) {
+        return albumMapper.selectDetailById(id) ;
+    }
+
+
+    @Override
     public int save(Album entity) {
         return 0;
     }
