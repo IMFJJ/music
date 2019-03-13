@@ -2,21 +2,16 @@ package com.study.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import com.study.model.Album;
 import com.study.model.User;
 import com.study.service.AlbumService;
-import javafx.beans.DefaultProperty;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpSession;
-import java.awt.print.Pageable;
 import java.util.List;
 import java.util.Map;
 
@@ -52,6 +47,6 @@ public class AlbumController {
         // 查询专辑以及歌曲信息
        // Album album = albumService.findDetailById(id);
        // model.addAttribute("album", album);
-        return "album/edit";
+        return "edit";
     }
 }
