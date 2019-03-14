@@ -8,6 +8,7 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.study.consts.EnumConst;
 import org.apache.poi.ss.usermodel.DateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +33,9 @@ public class FileUploadController {
 	// 专辑音频的访问目录
 	@Value("${album.audio.fileStr}")
 	private String audioFileStr;
-
+	// 当前域名
+	@Value("${MUSIC.INDEX_CHILD}")
+	private String host;
 	/**
 	 * yidian bug收集传图
 	 *
@@ -53,17 +56,17 @@ public class FileUploadController {
 		FileOutputStream outputStream = null;
 		try {
 			// 如果目录不存在，自动创建文件夹
-			File dir = new File(collectBugImgFileDir);
+			File dir = new File(audioFileDir);
 			if (!dir.exists()) {
 				dir.mkdirs();
 			}
-			if(Strings.isNullOrEmpty(suffix)){
-				suffix=".png";
+			if(suffix==null || "".equals(suffix)){
+				return json;
 			}
 			// 上传文件名+后缀名
 			String filename = UUID.randomUUID() + suffix;
 			// 完整路径
-			String imgPath = collectBugImgFileDir + filename ;
+			String imgPath = audioFileStr + filename ;
 			// new一个文件对象用来保存图片
 			File imageFile = new File(imgPath);
 			// 创建输出流
@@ -77,7 +80,7 @@ public class FileUploadController {
 			}
 			outputStream.write(result);
 			json.put("code", EnumConst.RetCode.SUCCESS.getCode());
-			json.put("path",host+collectBugImgFileStr+filename);
+			json.put("path",host+audioFileStr+filename);
 			return json;
 		} catch (Exception e) {
 			log.error("[文件上传（fileUpload）][errors:" + e + "]");
@@ -95,187 +98,5 @@ public class FileUploadController {
 			}
 		}
 	}
-	/**
-	 * 上传内容封面
-	 *
-	 * @author lidz
-	 * @time 2018年5月29日 下午8:28:59
-	 * @param request
-	 * @param file
-	 * @return
-	 */
-	@RequestMapping(value = "/substance", method = RequestMethod.POST)
-	public @ResponseBody JSONObject uploadImg(HttpServletRequest request,@RequestParam("file")   MultipartFile file,String md5String,Integer width ,Integer height) {
-		JSONObject json = new JSONObject();
-		try {
-			String endFile = DateUtil.endFileDir(); // 图片的根目录后面的文件夹目录（XXXX/XX（年月）/X（日））
-			String imgSavePath = substanceFileDir + endFile; // 文件完整保存目录
-			// 如果目录不存在，自动创建文件夹
-			File dir = new File(imgSavePath);
-			if (!dir.exists()) {
-				dir.mkdirs();
-			}
-			// 文件后缀名
-			String suffix = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
-			// 上传文件名
-			String filename = UUID.randomUUID() + suffix;
-			// 服务器端保存的文件对象
-			File serverFile = new File(imgSavePath + filename);
-			// 将上传的文件写入到服务器端文件内
-			file.transferTo(serverFile);
-			// 访问路径
-			String path = host + substancefileStr + endFile + filename;
-			json.put("success", true);
-			json.put("msg", "上传成功！");
-			json.put("file_path", path);
-			//app需要的额外参数
-			json.put("md5String",md5String);
-			json.put("width", width);
-			json.put("height", height);
-			return json;
-		} catch (Throwable e) {
-			log.info(e.getMessage());
-			e.printStackTrace();
-			json.put("success", false);
-			json.put("msg",e.getMessage());
-			json.put("file_path", "");
-			return json;
-		}
-	}
 
-	/**
-	 * @Description: 上传不通过审核图片
-	 * @Author: JJ
-	 * @CreateDate: 2018/6/5 15:04
-	 * @Version: 2.0
-	 */
-	@RequestMapping(value = "/explain", method = RequestMethod.POST)
-	public @ResponseBody JSONObject explain(HttpServletRequest request, MultipartFile file) {
-		JSONObject json = new JSONObject();
-		try {
-			String endFile = DateUtil.endFileDir(); // 图片的根目录后面的文件夹目录（XXXX/XX（年月）/X（日））
-			String imgSavePath = explainImgFileDir + endFile; // 文件完整保存目录
-			// 如果目录不存在，自动创建文件夹
-			File dir = new File(imgSavePath);
-			if (!dir.exists()) {
-				dir.mkdirs();
-			}
-			// 文件后缀名
-			String suffix = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
-			// 上传文件名
-			String filename = UUID.randomUUID() + suffix;
-			// 服务器端保存的文件对象
-			File serverFile = new File(imgSavePath + filename);
-			// 将上传的文件写入到服务器端文件内
-			file.transferTo(serverFile);
-			// 访问路径
-			String path = host + explainImgFileStr + endFile + filename;
-			json.put("success", true);
-			json.put("msg", "上传成功！");
-			json.put("file_path", path);
-			return json;
-		} catch (Exception e) {
-			e.printStackTrace();
-			json.put("success", false);
-			json.put("msg", "上传失败！");
-			json.put("file_path", "");
-			return json;
-		}
-	}
-
-	/**
-	 * 上传内容举报图
-	 *
-	 * @author zemel
-	 * @time 2018年8月20日 下午8:28:59
-	 * @param request
-	 * @param file
-	 * @return
-	 */
-	@RequestMapping(value = "/accusation", method = RequestMethod.POST)
-	public @ResponseBody JSONObject uploadAccusationImg(HttpServletRequest request,@RequestParam("file")   MultipartFile file,String md5String,Integer width ,Integer height) {
-		JSONObject json = new JSONObject();
-		try {
-			String endFile = DateUtil.endFileDir(); // 图片的根目录后面的文件夹目录（XXXX/XX（年月）/X（日））
-			String imgSavePath = accusationImgFileDir + endFile; // 文件完整保存目录
-			// 如果目录不存在，自动创建文件夹
-			File dir = new File(imgSavePath);
-			if (!dir.exists()) {
-				dir.mkdirs();
-			}
-			// 文件后缀名
-			String suffix = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
-			// 上传文件名
-			String filename = UUID.randomUUID() + suffix;
-			// 服务器端保存的文件对象
-			File serverFile = new File(imgSavePath + filename);
-			// 将上传的文件写入到服务器端文件内
-			file.transferTo(serverFile);
-			// 访问路径
-			String path = host + accusationImgFileStr + endFile + filename;
-			json.put("success", true);
-			json.put("msg", "上传成功！");
-			json.put("file_path", path);
-			//app需要的额外参数
-			json.put("md5String",md5String);
-			json.put("width", width);
-			json.put("height", height);
-			return json;
-		} catch (Throwable e) {
-			log.info(e.getMessage());
-			e.printStackTrace();
-			json.put("success", false);
-			json.put("msg",e.getMessage());
-			json.put("file_path", "");
-			return json;
-		}
-	}
-
-	/**
-	 * 上传内容举报图
-	 *
-	 * @author zemel
-	 * @time 2018年8月20日 下午8:28:59
-	 * @param request
-	 * @param file
-	 * @return
-	 */
-	@RequestMapping(value = "/feedback", method = RequestMethod.POST)
-	public @ResponseBody JSONObject uploadFeedbackImg(HttpServletRequest request,@RequestParam("file")   MultipartFile file,String md5String,Integer width ,Integer height) {
-		JSONObject json = new JSONObject();
-		try {
-			String endFile = DateUtil.endFileDir(); // 图片的根目录后面的文件夹目录（XXXX/XX（年月）/X（日））
-			String imgSavePath = feedbackImgFileDir + endFile; // 文件完整保存目录
-			// 如果目录不存在，自动创建文件夹
-			File dir = new File(imgSavePath);
-			if (!dir.exists()) {
-				dir.mkdirs();
-			}
-			// 文件后缀名
-			String suffix = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
-			// 上传文件名
-			String filename = UUID.randomUUID() + suffix;
-			// 服务器端保存的文件对象
-			File serverFile = new File(imgSavePath + filename);
-			// 将上传的文件写入到服务器端文件内
-			file.transferTo(serverFile);
-			// 访问路径
-			String path = host + feedbackImgFileStr + endFile + filename;
-			json.put("success", true);
-			json.put("msg", "上传成功！");
-			json.put("file_path", path);
-			//app需要的额外参数
-			json.put("md5String",md5String);
-			json.put("width", width);
-			json.put("height", height);
-			return json;
-		} catch (Throwable e) {
-			log.info(e.getMessage());
-			e.printStackTrace();
-			json.put("success", false);
-			json.put("msg",e.getMessage());
-			json.put("file_path", "");
-			return json;
-		}
-	}
 }
