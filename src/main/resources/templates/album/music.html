@@ -1,0 +1,346 @@
+﻿<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<html>
+<head>
+	<title>有爱音乐</title>
+	<meta name="renderer" content="webkit">
+  	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  	<meta name="apple-mobile-web-app-status-bar-style" content="black"> 
+  	<meta name="apple-mobile-web-app-capable" content="yes">
+  	<meta name="format-detection" content="telephone=no">
+	<link rel="stylesheet" type="text/css" th:href="@{/css/common.css}" >
+	<link rel="stylesheet" type="text/css" th:href="@{/layui/css/layui.css}" >
+</head>
+<body>
+<div class="container sMain">
+	<div class="tab-ul">
+		<ul class="mc-tabs" id="auto-id-1552619079766">
+			<li class="tab-wrapper">
+				<a href="javascript:;" class="active"> 专辑信息 </a>
+			</li>
+			<li class="tab-wrapper">
+				<a href="javascript:;"> 作品列表 </a>
+			</li>
+		</ul>
+	</div>
+	<div class="box cur">
+		<div class="addCategory">
+			<form class="layui-form" action="">
+			    <div class="layui-form-item">
+			    	<label class="layui-form-label">添加图片</label>
+					<img src="images/dieImg.png" id="img3" />
+					<div id="imgPreview">
+						<div id="prompt3">
+							<span id="imgSpan">点击上传</span>
+							<input type="file" id="file" class="filepath" onchange="changepic(this)" accept="image/jpg,image/jpeg,image/png,image/PNG">
+						</div>
+					</div>
+			    </div>
+			  	<div class="layui-form-item">
+				    <label class="layui-form-label">专辑名称</label>
+				    <div class="layui-input-inline width-layui">
+				      <input type="text" placeholder="字符限制在50个以内" class="layui-input" name="title" lay-verify="required|title" required placeholder="" autocomplete="off">
+				    </div>
+				</div>
+
+				<div class="layui-form-item">
+			      <label class="layui-form-label">专辑类型</label>
+			      <div class="layui-input-inline width-layui">
+			        <select name="quiz" lay-verify="required" lay-verType="tips">
+			          	<option value="">专辑</option>
+				        <option value="0">EP/Single</option>
+				        <option value="2">精选集</option>
+			        </select>
+			      </div>
+			    </div>
+				<div class="layui-form-item">
+				    <div class="layui-inline">
+				      <label class="layui-form-label">专辑版本</label>
+				      <div class="layui-input-inline width-layui">
+				        <select name="quiz" lay-verify="required" lay-verType="tips">
+				          <option value="">现场版</option>
+				          <option value="0">伴奏版</option>
+				          <option value="2">录音室版</option>
+				        </select>
+				      </div>
+				    </div>
+				</div>
+				<div class="layui-form-item">
+				    <div class="layui-inline">
+				      <label class="layui-form-label">发行日期</label>
+				      <div class="layui-input-inline width-layui">
+						  <input type="text" class="layui-input" id="test6-2">
+				      </div>
+				    </div>
+				</div>
+				<div class="layui-form-item">
+				    <div class="layui-inline">
+				      <label class="layui-form-label">语种</label>
+				      <div class="layui-input-inline width-layui">
+				        <select name="quiz" lay-verify="required" lay-verType="tips">
+				          <option value="">华语</option>
+				          <option value="0">日本</option>
+				          <option value="2">韩国</option>
+				        </select>
+				      </div>
+				    </div>
+				</div>
+				<div class="layui-form-item">
+				    <div class="layui-inline">
+				      <label class="layui-form-label">专辑风格</label>
+				      <div class="layui-input-inline width-layui">
+				        <select name="quiz" lay-verify="required" lay-verType="tips">
+				          <option value="">轻音乐 Easy Listening</option>
+				          <option value="0">流行 Pop</option>
+				          <option value="2">中国音乐 Chinese</option>
+				        </select>
+				      </div>
+				    </div>
+				</div>
+				<div class="layui-form-item layui-form-text">
+				    <label class="layui-form-label">专辑描述</label>
+				    <div class="layui-input-inline">
+				      <textarea placeholder="字符控制在40-10000个之间" class="layui-textarea width-layui-text" name="desc"></textarea>
+				    </div>
+				</div>
+			  	<div class="layui-form-item">
+				    <div class="layui-input-block">
+				      <button class="layui-btn bg" lay-submit lay-filter="formDemo">立即添加</button>
+				      <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+				    </div>
+				  </div>
+			</form>
+		</div>
+	</div>
+	<div class="box none">
+		<div class="_3ti32ad64460-bSLl0EL-v mc-songlist " id="auto-id-1552619079778" style="width: 1000px">
+		     <div class="songinfo-ctn" id="auto-id-1552619079782" style="float: left;">
+		      <div class="_1WkMU-ErU_eCqXA2AZm1pO" style="max-height: 550.2px;">
+		        <p class="song-group-name">已发布</p>
+		        <div class="_3OkK2Webfx3bIJJ3M_7Gah song-info-bar-item isSelected">
+		          <span class="col col-index">1</span>
+		          <span class="col col-songname">繁华唱遍（Cover：乐正绫）</span>
+		          <span class="col col-status"><span>已发布</span></span>
+		          <span class="col col-control"></span>
+		          <span class="col col-drag"><i class="icon-move"></i></span>
+		          <div class="uploader-wrap">
+		            <div class="" style="position: absolute; top: 0px; left: 0px; width: 100%; height: 100%;"></div>
+		          </div>
+		       </div>
+		        <div class="_3OkK2Webfx3bIJJ3M_7Gah song-info-bar-item">
+		          <span class="col col-index">2</span>
+		          <span class="col col-songname">戏妖（Cover：群星）</span>
+		          <span class="col col-status"><span>已发布</span></span>
+		          <span class="col col-control"></span>
+		          <span class="col col-drag"><i class="icon-move"></i></span>
+		          <div class="uploader-wrap">
+		           <div class="" style="position: absolute; top: 0px; left: 0px; width: 100%; height: 100%;"></div>
+		          </div>
+		        </div>
+		      </div>
+		      <div class="">
+		         <div class="_3qI6Ok9ofVXl8OZQTXQPtK mc-button  mc-button-ghost mc-button-normal">
+		          上传新作品
+		         </div>
+		      </div>
+		      <div class="_1dsVLNZZECzcrzMjTVHCZw mc-announcement " id="auto-id-1552619079781">
+		         <p class="text-row">说明：</p>
+		         <p class="text-row" id="auto-id-1552619079780">1. 翻唱和电音歌曲切勿将原唱/原作者名字填写在“歌手名”空格内</p>
+		         <p class="text-row">2. 歌曲上线后再次修改歌手名需要进行审核</p>
+		         <p class="text-row">3. 歌曲类型提交审核以后将不可以再修改</p>
+		         <p class="text-row">4. 没有词曲作者请选择无</p>
+		      </div>
+		     </div>
+		     <div class="songform-ctn" id="auto-id-1552619079777">
+		      <div class="_3cAd-mJPOHQ9jVDnK9ub2w" id="auto-id-1552619079776" style="float: left;">
+		       <div class="_158cnraQBLHbmdJgGdCDyT LN1uWsWgqcWS0UMMQlu38">
+		          <div class="label-name-row">
+		             <span class="label-name-text">歌曲类型</span>
+		             <span class="tips-wrap"></span>
+		          </div>
+		          <div class="form-content">
+		             <div>
+		              <span class="song-tag-name">翻唱</span>
+		             </div>
+		          </div>
+		       </div>
+		       <div class="_158cnraQBLHbmdJgGdCDyT " id="auto-id-1552619079775">
+		          <div class="label-name-row">
+		             <span class="label-name-text">歌曲名</span>
+		             <span class="tips-wrap"></span>
+		          </div>
+		          <div class="form-content" id="auto-id-1552619079774">
+		             <div id="auto-id-1552619079773">
+		                <input class="_1elEx6ch71ns_NuPRw_hgV mc-input mc-ipt " type="text" placeholder="" maxlength="-1" value="繁华唱遍" id="auto-id-1552619079772">
+		             </div>
+		          </div>
+		       </div>
+		       <div class="_158cnraQBLHbmdJgGdCDyT ">
+		          <div class="label-name-row">
+		             <span class="label-name-text">歌手名</span>
+		             <span class="tips-wrap"></span>
+		          </div>
+		          <div class="form-content">
+		             <div>
+		                <div class="_1vuOwkP3nwFfIrr3yopQVP mc-artistsearch">
+		                   <div class="m-search-wrapper">
+		                      <div class=" _2dfG6q7q3PytWr2b02ZXH_ u-artist-tag" title="有爱音乐">
+		                         <span class="u-artist-txt">有爱音乐</span>
+		                         <i class="icn u-icn u-icn-220 f-hand"></i>
+		                      </div>
+		                      <div class=" _2dfG6q7q3PytWr2b02ZXH_ u-artist-tag z-notfound" title="羽绣喵">
+		                         <span class="u-artist-txt">羽绣喵</span>
+		                         <i class="icn u-icn u-icn-220 f-hand"></i>
+		                      </div>
+		                      <input class="search-input" type="text" value="">
+		                   </div>
+		                </div>
+		             </div>
+		          </div>
+		       </div>
+		       <div class="_158cnraQBLHbmdJgGdCDyT _38jFzB79Zg1BvDtdZFf3Cs">
+		          <div class="label-name-row">
+		             <span class="label-name-text">原唱信息</span>
+		             <span class="tips-wrap"><span class="u-notfound-tips">找不到？</span></span>
+		          </div>
+		        <div class="form-content">
+		           <div>
+		              <div class="_1DHioCusrifTDRr-1c4RkK ">
+		                 <div class="_2bHk4nE7_PXFAnLBuEiGL5 mc-stripelist undefined">
+		                    <div class="list-row list-hd">
+		                       <div class="list-col col-songName" title="歌曲">
+		                        歌曲
+		                       </div>
+		                       <div class="list-col col-artistInfo" title="歌手">
+		                        歌手
+		                       </div>
+		                       <div class="list-col col-composeArtistList" title="曲作者">
+		                        曲作者
+		                       </div>
+		                       <div class="list-col col-lyricArtistList" title="词作者">
+		                        词作者
+		                       </div>
+		                       <div class="list-col col-delete" title=""></div>
+		                    </div>
+		                  <div class="list-bd" style="height: auto;">
+		                     <div class="list-row row-item">
+		                        <div class="list-col stripelist-col col-songName" title="" style="height: 40px; line-height: 40px;">
+		                           <div>
+		                              <span class="u-songname">繁华唱遍</span>
+		                           </div>
+		                        </div>
+		                        <div class="list-col stripelist-col col-artistInfo" title="" style="height: 40px; line-height: 40px;">
+		                          <span></span>
+		                        </div>
+		                        <div class="list-col stripelist-col col-composeArtistList" title="" style="height: 40px; line-height: 40px;">
+		                          <span>papaw泡泡</span>
+		                        </div>
+		                        <div class="list-col stripelist-col col-lyricArtistList" title="" style="height: 40px; line-height: 40px;">
+		                          <span>Vagary</span>
+		                        </div>
+		                        <div class="list-col stripelist-col col-delete" title="" style="height: 40px; line-height: 40px;"></div>
+		                        <div class="addon"></div>
+		                     </div>
+		                  </div>
+		                 </div>
+		              </div>
+		           </div>
+		        </div>
+		       </div>
+		       <div class="_158cnraQBLHbmdJgGdCDyT s_FVp3uzssRKhjgHs0AVc">
+		          <div class="form-content">
+		             <div>
+		                <div class="mc-lyric-editor-entrance _2vmLYRfO7stkb5EmSQFkye">
+		                   <div class="title">
+		                      <span>歌词</span>
+		                      <div class="_3qI6Ok9ofVXl8OZQTXQPtK mc-button  mc-button-ghost mc-button-normal">
+		                       制作滚动歌词
+		                      </div>
+		                   </div>
+		                 <div class="_2ZT1oyKL6Av9KGHPN0qYRb">
+		                    <textarea class="_1elEx6ch71ns_NuPRw_hgV mc-textarea mc-ipt " placeholder="" style="padding-bottom: 44px;">
+		                      我以为那个时代已过去，殊不知当你歌唱时， 属于那个时代的一切都在归来。 ——题记 行越远越不敢回头细看 怕泪点不争气飞成雨线 一甲子也不过眨眼六十年 这少女竟皱了桃腮粉面 那郎君为何已白发苍髯 流光百转 又到你台前 踮脚顾盼梨园 那年我才一十三 春色随风卷 良辰美景输了奈何天 别怪我心太贪 罪名都在曲牌间 若不是《浣溪沙》把《秋夜月》儿掩 我怎会困守《牧羊关》 最是你太翩跹 生死爱恨瞬息千万变 将相王侯轮番登殿 才子佳人鸳鸯愿 谁成全 music. 路再远再蜿蜒仍是个圈 缘起处注定盘桓成终点 六十年也不过悠悠两万天 这一桌同二椅红漆黯淡 是多久没能被喝彩渲染 粉墨胭脂 何时再上脸 回眸又见梨园 一到台前就少年 不是韶光贱 姹紫嫣红怎舍得开遍 就怪我心太贪 要把灯火轻轻燃 擎了这《一枝花》招来《离亭燕》 我此生不肯《解连环》 最爱你太翩跹 做打唱念一字一流连 戏里繁华戏外江山 你的美只愿岁月 看得见
+		                    </textarea>
+		                    <div class="_2A47Xq_ckJKQpN9EObS-LM" style="display: block;">
+		                       <span>检测到歌词暂不支持滚动，制作滚动歌词可以提升歌曲质量，</span>
+		                       <a href="javascript: void(0)" class="mc-link">立即制作 &gt;</a>
+		                    </div>
+		                 </div>
+		                </div>
+		             </div>
+		          </div>
+		       </div>
+		       <div class="_158cnraQBLHbmdJgGdCDyT _2ftVLjo4hDuDAC2-7mG9PA">
+		          <div class="form-content">
+		             <div>
+		                <a class="mc-link m-link" style="float: right;">查看作品上传使用许可 &gt;</a>
+		             </div>
+		          </div>
+		       </div>
+		       <div class="_158cnraQBLHbmdJgGdCDyT _1nYTcCNufgrgG_agukfSYd">
+		          <div class="form-content">
+		             <div>
+		                <a class="m-link" href="javascript:void(0)">替换</a>
+		             </div>
+		          </div>
+		       </div>
+		      </div>
+		     </div>
+		    </div> 
+		    <div class="footer-ctn">
+		        <div class="fixed-ctn">
+		          <a href="#" target="_self" rel="noopener noreferrer" class="_3qI6Ok9ofVXl8OZQTXQPtK mc-button  mc-button-ghost mc-button-normal">取消</a>
+		          <div class="_3qI6Ok9ofVXl8OZQTXQPtK mc-button  mc-button-primary mc-button-normal">提交</div>
+		        </div>
+		    </div>
+	</div>
+</div>	
+
+<script src="js/jquery-2.1.4.js"></script>
+<script src="layui/layui.js"></script>
+<script type="text/javascript">
+	//显示状态
+	layui.use(['form','laydate'], function(){
+	  var form = layui.form
+	  ,laydate = layui.laydate
+	  laydate.render({
+	    elem: '#test6-2' //指定元素
+	    // ,type: 'datetime'
+	    ,theme: '#393D49'
+	    //,range: true
+	    ,trigger: 'click'
+	  });
+	  //监听提交
+	  form.on('submit(*)', function(data){
+	    console.log(data)
+	    alert(JSON.stringify(data.field));
+	    return false;
+	  });
+	});
+	/*上传图片*/
+	function changepic() {
+	 var reads = new FileReader();
+	 f = document.getElementById('file').files[0];
+	 reads.readAsDataURL(f);
+	 reads.onload = function(e) {
+	 document.getElementById('img3').src = this.result;
+	 $("#img3").css("display", "block");
+	 };
+	}
+
+	 //菜单切换
+    $(".mc-tabs li").click(function () {
+        for (var i = 0; i < $(".mc-tabs li").size() ; i++) {
+            if (this == $(".mc-tabs li").get(i)) {
+                $(".mc-tabs li a").eq(i).addClass("active");
+                $(".box").removeClass("cur");
+                $(".box").eq(i).addClass("cur");
+            } else {
+                $(".mc-tabs li a").eq(i).removeClass("active");
+            }
+        }
+    })
+</script>
+</body>
+</html>

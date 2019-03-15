@@ -47,6 +47,6 @@ public class AlbumController {
         // 查询专辑以及歌曲信息
        // Album album = albumService.findDetailById(id);
        // model.addAttribute("album", album);
-        return "edit";
+        return "album/edit";
     }
 }
