@@ -94,10 +94,8 @@
                         <div class="layui-inline">
                             <label class="layui-form-label">语种</label>
                             <div class="layui-input-inline width-layui">
-                                <select name="quiz" lay-verify="required" lay-verType="tips">
-                                    <option value="">华语</option>
-                                    <option value="0">日本</option>
-                                    <option value="2">韩国</option>
+                                <select name="quiz" lay-verify="required" lay-verType="tips" th:if="${languagesList!=null}"  >
+                                    <option th:each="obj:${languagesList}" th:text="${obj.name}" th:value="${obj.id}"></option>
                                 </select>
                             </div>
                         </div>

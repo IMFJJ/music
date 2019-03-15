@@ -3,8 +3,10 @@ package com.study.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.study.model.Album;
+import com.study.model.MLanguages;
 import com.study.model.User;
 import com.study.service.AlbumService;
+import com.study.service.MLanguagesService;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,6 +23,8 @@ import java.util.Map;
 public class AlbumController {
     @Resource
     AlbumService albumService;
+    @Resource
+    MLanguagesService mLanguagesService;
     @RequestMapping
     @ResponseBody
     public Map<String,Object> getAll(Album album,  Integer size, Integer limit){
@@ -45,8 +49,12 @@ public class AlbumController {
             return "error";
         }
         // 查询专辑以及歌曲信息
+
+        //语言
+        List<MLanguages> languagesList=mLanguagesService.findList();
        // Album album = albumService.findDetailById(id);
-       // model.addAttribute("album", album);
+        model.addAttribute("languagesList", languagesList);
+
         return "album/edit";
     }
 }
