@@ -45,7 +45,7 @@
                 <form class="layui-form" action="">
                     <div class="layui-form-item">
                         <label class="layui-form-label">添加图片</label>
-                        <img th:src="@{/img/dieImg.png}"  id="img3" />
+                        <img th:src="@{/img/dieImg.png}"  id="coverImage" />
                         <div id="imgPreview">
                             <div id="prompt3">
                                 <span id="imgSpan">点击上传</span>
@@ -63,10 +63,8 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label">专辑类型</label>
                         <div class="layui-input-inline width-layui">
-                            <select name="quiz" lay-verify="required" lay-verType="tips">
-                                <option value="">专辑</option>
-                                <option value="0">EP/Single</option>
-                                <option value="2">精选集</option>
+                            <select name="quiz" lay-verify="required" lay-verType="tips" th:if="${typeList!=null}"  >
+                                <option th:each="obj:${typeList}" th:text="${obj.name}" th:value="${obj.id}"></option>
                             </select>
                         </div>
                     </div>
@@ -74,10 +72,8 @@
                         <div class="layui-inline">
                             <label class="layui-form-label">专辑版本</label>
                             <div class="layui-input-inline width-layui">
-                                <select name="quiz" lay-verify="required" lay-verType="tips">
-                                    <option value="">现场版</option>
-                                    <option value="0">伴奏版</option>
-                                    <option value="2">录音室版</option>
+                                <select name="quiz" lay-verify="required" lay-verType="tips" th:if="${versionList!=null}"  >
+                                    <option th:each="obj:${versionList}" th:text="${obj.name}" th:value="${obj.id}"></option>
                                 </select>
                             </div>
                         </div>
@@ -104,10 +100,8 @@
                         <div class="layui-inline">
                             <label class="layui-form-label">专辑风格</label>
                             <div class="layui-input-inline width-layui">
-                                <select name="quiz" lay-verify="required" lay-verType="tips">
-                                    <option value="">轻音乐 Easy Listening</option>
-                                    <option value="0">流行 Pop</option>
-                                    <option value="2">中国音乐 Chinese</option>
+                                <select name="quiz" lay-verify="required" lay-verType="tips" th:if="${styleList!=null}"  >
+                                    <option th:each="obj:${styleList}" th:text="${obj.name}" th:value="${obj.id}"></option>
                                 </select>
                             </div>
                         </div>
@@ -350,9 +344,37 @@
         f = document.getElementById('file').files[0];
         reads.readAsDataURL(f);
         reads.onload = function(e) {
-            document.getElementById('img3').src = this.result;
-            $("#img3").css("display", "block");
+            document.getElementById('coverImage').src = this.result;
+            $("#coverImage").css("display", "block");
         };
+    }
+    //上传图片
+    $('.filepath').change(function () {
+        uuploadImage(document.getElementById('file').files[0]);
+    });
+
+    function uuploadImage(obj) {
+        alert("开始")
+        var files = obj[0].files[0]
+        var isAllow=testMaxSize(files,1024*2*1024);
+        if(!isAllow){
+            alert(" 图片大小超过2M限制！");
+            return;
+        }
+        var data = new FormData();
+        data.append('file', files);
+        $.ajax({
+            url: '/admin//upload/audio',
+            type: 'POST',
+            data: data,
+            cache: false,
+            processData: false,
+            contentType: false,
+            success: function (data) {
+                var imgSpan = '<span style="background-image: url(' + data.file_path + ');"></span>';
+                $('#coverImage').html(imgSpan);
+            }
+        });
     }
 
     //菜单切换

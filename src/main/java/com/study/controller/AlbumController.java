@@ -2,11 +2,8 @@ package com.study.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
-import com.study.model.Album;
-import com.study.model.MLanguages;
-import com.study.model.User;
-import com.study.service.AlbumService;
-import com.study.service.MLanguagesService;
+import com.study.model.*;
+import com.study.service.*;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,6 +22,12 @@ public class AlbumController {
     AlbumService albumService;
     @Resource
     MLanguagesService mLanguagesService;
+    @Resource
+    MTypeService mTypeService;
+    @Resource
+    MStyleService mStyleService;
+    @Resource
+    MVersionService mVersionService;
     @RequestMapping
     @ResponseBody
     public Map<String,Object> getAll(Album album,  Integer size, Integer limit){
@@ -52,9 +55,18 @@ public class AlbumController {
 
         //语言
         List<MLanguages> languagesList=mLanguagesService.findList();
+        //类型
+        List<MType> typeList=mTypeService.findList();
+        //风格
+        List<MStyle> styleList=mStyleService.findList();
+        //版本
+        List<MVersion> versionList=mVersionService.findList();
+
        // Album album = albumService.findDetailById(id);
         model.addAttribute("languagesList", languagesList);
-
+        model.addAttribute("typeList", typeList);
+        model.addAttribute("styleList", styleList);
+        model.addAttribute("versionList", versionList);
         return "album/edit";
     }
 }
