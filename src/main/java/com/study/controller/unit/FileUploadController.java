@@ -13,11 +13,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
+import  com.study.util.DateUtil;
 import com.alibaba.fastjson.JSONObject;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletRequest;
 
 @Controller
-@RequestMapping(value = "/api/upload")
+@RequestMapping(value = "/upload")
 public class FileUploadController {
 	private static final Logger log = LoggerFactory.getLogger(FileUploadController.class);
 	// 专辑音频的目录
@@ -38,7 +41,11 @@ public class FileUploadController {
 	 * @param
 	 * @return
 	 */
-	@RequestMapping(value = "/upload/audio", method = RequestMethod.POST)
+    @RequestMapping(value = "/audio", method = RequestMethod.POST)
+    public @ResponseBody JSONObject audio(HttpServletRequest request, MultipartFile file) {
+        return upload(file,audioFileDir,audioFileStr);
+    }
+	/*@RequestMapping(value = "/audio", method = RequestMethod.POST)
 	public @ResponseBody JSONObject collectBugImg(String imgdata,String suffix) {
 		JSONObject json = new JSONObject();
 		if (imgdata == null) {
@@ -91,5 +98,38 @@ public class FileUploadController {
 			}
 		}
 	}
+*/
+    private JSONObject upload(MultipartFile file, String FileDir, String FileStr){
+        JSONObject json = new JSONObject();
+        try {
+            String endFile = DateUtil.endFileDir(); // 图片的根目录后面的文件夹目录（XXXX/XX（年月）/X（日））
+            String imgSavePath = FileDir + endFile; // 文件完整保存目录
+            // 如果目录不存在，自动创建文件夹
+            File dir = new File(imgSavePath);
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }
+            // 文件后缀名
+            String suffix = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
+            // 上传文件名
+            String filename = UUID.randomUUID() + suffix;
+            // 服务器端保存的文件对象
+            File serverFile = new File(imgSavePath + filename);
+            // 将上传的文件写入到服务器端文件内
+            file.transferTo(serverFile);
+            // 访问路径
+            String path = host + FileStr + endFile + filename;
+            json.put("success", true);
+            json.put("msg", "上传成功！");
+            json.put("file_path", path);
+            return json;
+        } catch (Exception e) {
+            e.printStackTrace();
+            json.put("success", false);
+            json.put("msg", "上传失败！");
+            json.put("file_path", "");
+            return json;
+        }
+    }
 
 }
