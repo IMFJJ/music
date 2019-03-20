@@ -7,17 +7,21 @@ import com.study.service.*;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 
 @Controller
 @RequestMapping("/album")
-public class AlbumController {
+public class AlbumController extends BasicController {
     @Resource
     AlbumService albumService;
     @Resource
@@ -62,11 +66,56 @@ public class AlbumController {
         //版本
         List<MVersion> versionList=mVersionService.findList();
 
-       // Album album = albumService.findDetailById(id);
+        //专辑信息
+        Album album = albumService.findById(id);
+        //
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+         String dateString = formatter.format(album.getPublicTime());
+        if (album!=null){
+            album.setDateString(dateString);
+        }
+        model.addAttribute("album", album);
         model.addAttribute("languagesList", languagesList);
         model.addAttribute("typeList", typeList);
         model.addAttribute("styleList", styleList);
         model.addAttribute("versionList", versionList);
         return "album/edit";
     }
+    @PostMapping(value = "/sureSave")
+    @ResponseBody
+    public Object sureSave(Album album) throws ParseException {
+        User user = (User) SecurityUtils.getSubject().getPrincipal();
+        if(user==null){
+            return  fail("未登录");
+        }
+        Album oldAlbum;
+        if (album.getId()==null){
+            //添加
+            oldAlbum=album;
+            oldAlbum.setUserId(user.getId());
+            album.setCreateTime(new Date());
+            album.setUpdateTime(new Date());
+        }else {
+             oldAlbum=albumService.findById(album.getId());
+            if(oldAlbum==null){
+                return success(null);
+            }
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            oldAlbum.setPublicTime(sdf.parse(album.getDateString()));
+            oldAlbum.setCoverImage(album.getCoverImage());
+            oldAlbum.setLanguages(album.getLanguages());
+            oldAlbum.setName(album.getName());
+            oldAlbum.setStatement(album.getStatement());
+            oldAlbum.setStyle(album.getStyle());
+            oldAlbum.setType(album.getType());
+            oldAlbum.setVersion(album.getVersion());
+        }
+        Integer res= albumService.saveOrUpdate(oldAlbum);
+        if (res>0){
+            return  success(null);
+        }else {
+            return fail("保存失败");
+        }
+    }
+
 }

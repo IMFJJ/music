@@ -1,9 +1,13 @@
 package com.study.model;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.persistence.*;
 
 public class Album {
+    @Transient
+    private  String dateString;
     @Transient
     private  Integer musicCount;
     @Transient
@@ -37,6 +41,7 @@ public class Album {
      */
     @Column(name = "public_time")
     private Date publicTime;
+
 
     /**
      * 语种 华语 日语 韩语 欧美 其他
@@ -77,6 +82,14 @@ public class Album {
      */
     @Column(name = "update_time")
     private Date updateTime;
+
+    public String getDateString() {
+        return dateString;
+    }
+
+    public void setDateString(String dateString) {
+        this.dateString = dateString;
+    }
 
     public Integer getMusicCount() {
         return musicCount;

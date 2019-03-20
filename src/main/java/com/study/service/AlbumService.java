@@ -16,4 +16,18 @@ public interface AlbumService extends IService<Album> {
     * @date 2019/3/13 8:43
    */
    Album findDetailById(Integer id);
+
+    /**
+     * 获取专辑信息
+     * @param id
+     * @return
+     */
+   Album findById(Integer id);
+
+    /**
+     * 添加或者修改
+     * @param id
+     * @return
+     */
+    Integer saveOrUpdate(Album album);
 }

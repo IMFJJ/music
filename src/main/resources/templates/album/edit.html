@@ -41,11 +41,12 @@
             </ul>
         </div>
         <div class="box cur">
+            <input hidden="hidden" id="id" th:value="${album.id}">
             <div class="addCategory">
                 <form class="layui-form" action="">
                     <div class="layui-form-item">
                         <label class="layui-form-label">添加图片</label>
-                        <img th:src="@{/img/dieImg.png}"  id="coverImage" />
+                        <img th:src="${album.coverImage==null?'/img/dieImg.png':album.coverImage}"  id="coverImage" />
                         <div id="imgPreview">
                             <div id="prompt3">
                                 <span id="imgSpan">点击上传</span>
@@ -56,15 +57,15 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label">专辑名称</label>
                         <div class="layui-input-inline width-layui">
-                            <input type="text" placeholder="字符限制在50个以内" class="layui-input" name="title" lay-verify="required|title" required placeholder="" autocomplete="off">
+                            <input type="text" placeholder="字符限制在50个以内" class="layui-input" name="name" id="name" lay-verify="required|title" required placeholder="" autocomplete="off" th:value="${album.name}">
                         </div>
                     </div>
 
                     <div class="layui-form-item">
                         <label class="layui-form-label">专辑类型</label>
                         <div class="layui-input-inline width-layui">
-                            <select name="quiz" lay-verify="required" lay-verType="tips" th:if="${typeList!=null}"  >
-                                <option th:each="obj:${typeList}" th:text="${obj.name}" th:value="${obj.id}"></option>
+                            <select name="quiz" lay-verify="required" lay-verType="tips" th:if="${typeList!=null}"  id="type">
+                                <option th:each="obj:${typeList}" th:text="${obj.name}" th:value="${obj.id}" th:selected="${album.type==obj.id.toString()}" ></option>
                             </select>
                         </div>
                     </div>
@@ -72,17 +73,17 @@
                         <div class="layui-inline">
                             <label class="layui-form-label">专辑版本</label>
                             <div class="layui-input-inline width-layui">
-                                <select name="quiz" lay-verify="required" lay-verType="tips" th:if="${versionList!=null}"  >
-                                    <option th:each="obj:${versionList}" th:text="${obj.name}" th:value="${obj.id}"></option>
+                                <select name="quiz" lay-verify="required" lay-verType="tips" th:if="${versionList!=null}" id="version"  >
+                                    <option th:each="obj:${versionList}" th:text="${obj.name}" th:value="${obj.id}" th:selected="${album.version == obj.id.toString()} "></option>
                                 </select>
                             </div>
                         </div>
                     </div>
                     <div class="layui-form-item">
                         <div class="layui-inline">
-                            <label class="layui-form-label">发行日期</label>
+                            <label class="layui-form-label" >发行日期</label>
                             <div class="layui-input-inline width-layui">
-                                <input type="text" class="layui-input" id="test6-2">
+                                <input type="text" class="layui-input" id="dateString" th:value="${album.dateString}">
                             </div>
                         </div>
                     </div>
@@ -90,8 +91,8 @@
                         <div class="layui-inline">
                             <label class="layui-form-label">语种</label>
                             <div class="layui-input-inline width-layui">
-                                <select name="quiz" lay-verify="required" lay-verType="tips" th:if="${languagesList!=null}"  >
-                                    <option th:each="obj:${languagesList}" th:text="${obj.name}" th:value="${obj.id}"></option>
+                                <select name="quiz" lay-verify="required" lay-verType="tips" th:if="${languagesList!=null}" id="languages" >
+                                    <option th:each="obj:${languagesList}" th:text="${obj.name}" th:value="${obj.id}"  th:selected="${album.languages == obj.id.toString()} "></option>
                                 </select>
                             </div>
                         </div>
@@ -100,8 +101,8 @@
                         <div class="layui-inline">
                             <label class="layui-form-label">专辑风格</label>
                             <div class="layui-input-inline width-layui">
-                                <select name="quiz" lay-verify="required" lay-verType="tips" th:if="${styleList!=null}"  >
-                                    <option th:each="obj:${styleList}" th:text="${obj.name}" th:value="${obj.id}"></option>
+                                <select name="quiz" lay-verify="required" lay-verType="tips" th:if="${styleList!=null}"  id="style" >
+                                    <option th:each="obj:${styleList}" th:text="${obj.name}" th:value="${obj.id}" th:selected="${album.style == obj.id.toString()} " ></option>
                                 </select>
                             </div>
                         </div>
@@ -109,12 +110,12 @@
                     <div class="layui-form-item layui-form-text">
                         <label class="layui-form-label">专辑描述</label>
                         <div class="layui-input-inline">
-                            <textarea placeholder="字符控制在40-10000个之间" class="layui-textarea width-layui-text" name="desc"></textarea>
+                            <textarea placeholder="字符控制在40-10000个之间" class="layui-textarea width-layui-text" name="statement" id="statement" th:text="${album.statement}"></textarea>
                         </div>
                     </div>
                     <div class="layui-form-item">
                         <div class="layui-input-block">
-                            <button class="layui-btn bg" lay-submit lay-filter="formDemo">立即添加</button>
+                            <button class="layui-btn bg" type="button" id="sureSave">立即保存</button>
                             <button type="reset" class="layui-btn layui-btn-primary">重置</button>
                         </div>
                     </div>
@@ -399,6 +400,19 @@
         isAllow = size <= Max_Size;
         return isAllow;
     }
+
+    //保存专辑
+    $("#sureSave").click(function () {
+    $.ajax({
+        url: '/album/sureSave',
+        type: 'Post',
+        dataType: "json", //表示返回值类型，不必须
+        data: { id:$("#id").val(),coverImage: $("#coverImage").val(), name: $("#name").val(), type: $("#type").val(), version: $("#version").val(),dateString: $("#dateString").val(),languages: $("#languages").val(),style: $("#style").val(),statement: $("#statement").val()},
+        success: function (data) {
+          window.location.href="/albumPage"
+        }
+    });
+    })
 </script>
 </body>
 </html>

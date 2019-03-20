@@ -90,4 +90,8 @@
         WHERE
             STATUS = 1
     </select>
+    
+    <select id="selectById" resultMap="BaseResultMap">
+        select  * from  album a where a.status=1 and  a.id=#{id}
+    </select>
 </mapper>

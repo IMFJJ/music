@@ -30,6 +30,20 @@ public class AlbumServiceImpl extends BaseService<Album> implements AlbumService
         return albumMapper.selectDetailById(id) ;
     }
 
+    @Override
+    public Album findById(Integer id) {
+        return albumMapper.selectById( id);
+    }
+
+    @Override
+    public Integer  saveOrUpdate(Album album) {
+        if(album.getId()==null){
+           return albumMapper.insert(album);
+        }else {
+           return albumMapper.updateByPrimaryKey(album);
+        }
+    }
+
 
     @Override
     public int save(Album entity) {
