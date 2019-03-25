@@ -142,6 +142,7 @@
 <script th:src="@{/js/layer.js}"></script>
 <script th:src="@{/layui/layui.js}"></script>
 <script type="text/javascript">
+    var albumId=14;
     //显示状态
     layui.use(['form','laydate'], function(){
         var form = layui.form
@@ -245,12 +246,12 @@
         //第一个实例
         table.render({
             elem: '#examain'
-            , url: '/album',
+            , url: '/music/getAllByAblumId?albumId='+albumId,
             id: 'testReload'
             , cols: [
                 [
                     {
-                        field: '', title: '合辑序号', sort: false,templet: function (d) {
+                        field: '', title: '歌曲序号', sort: false,templet: function (d) {
                             if (d.id != null) {
                                 return d.id;
                             } else {
@@ -259,31 +260,53 @@
                         }
                     }
                     ,{
-                    field: '', title: '作者', sort: false,templet: function (d) {
-                        if (d.username != null) {
-                            return d.username;
-                        } else {
-                            return '';
-                        }
-                    }
-                }  ,{
-                    field: '', title: '歌曲数', sort: false,templet: function (d) {
-                        if (d.musicCount != null) {
-                            return d.musicCount;
-                        } else {
-                            return '';
-                        }
-                    }
-                }
-                    , {
-                    field: '', title: '专辑名称', sort: false,templet: function (d) {
+                    field: '', title: '歌曲名称', sort: false,templet: function (d) {
                         if (d.name != null) {
                             return d.name;
                         } else {
                             return '';
                         }
                     }
+                }  ,{
+                    field: '', title: '演唱者', sort: false,templet: function (d) {
+                        if (d.singer != null) {
+                            return d.singer;
+                        } else {
+                            return '';
+                        }
+                    }
                 }
+                    , {
+                    field: '', title: '作词', sort: false,templet: function (d) {
+                        if (d.author != null) {
+                            return d.author;
+                        } else {
+                            return '';
+                        }
+                    }
+                }  , {
+                        field: '', title: '作曲', sort: false,templet: function (d) {
+                            if (d.Composer != null) {
+                                return d.Composer;
+                            } else {
+                                return '';
+                            }
+                        }
+                    } ,
+                    {
+                    field: '', title: '作曲', sort: false,templet: function (d) {
+                        if (d.type != null) {
+                            if(d.type==1){
+                                return "翻唱";
+                            }else if(d.type==2){
+                                return "原创";
+                            }
+                            return '';
+                        } else {
+                            return '';
+                                }
+                            }
+                        }
                     ,{
                     field: '', title: '发行时间', sort: false,templet: function (d) {
                         var timeStr="";

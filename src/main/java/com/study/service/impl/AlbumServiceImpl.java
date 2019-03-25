@@ -1,12 +1,9 @@
 package com.study.service.impl;
 
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import com.study.mapper.AlbumMapper;
 import com.study.model.Album;
 import com.study.service.AlbumService;
 import org.springframework.stereotype.Service;
-import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
 import java.util.List;
