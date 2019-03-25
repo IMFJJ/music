@@ -52,9 +52,6 @@ public class AlbumController extends BasicController {
         if (null == user) {
             return "error";
         }
-        if (null == id || id == 0) {
-            return "error";
-        }
         // 查询专辑以及歌曲信息
 
         //语言
@@ -69,9 +66,9 @@ public class AlbumController extends BasicController {
         //专辑信息
         Album album = albumService.findById(id);
         //
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-         String dateString = formatter.format(album.getPublicTime());
         if (album!=null){
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+            String dateString = formatter.format(album.getPublicTime());
             album.setDateString(dateString);
         }
         model.addAttribute("album", album);
@@ -79,7 +76,12 @@ public class AlbumController extends BasicController {
         model.addAttribute("typeList", typeList);
         model.addAttribute("styleList", styleList);
         model.addAttribute("versionList", versionList);
-        return "album/edit";
+        if(album==null){
+            return "album/add";
+        }else {
+            return "album/edit";
+        }
+
     }
     @PostMapping(value = "/sureSave")
     @ResponseBody
@@ -89,18 +91,21 @@ public class AlbumController extends BasicController {
             return  fail("未登录");
         }
         Album oldAlbum;
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         if (album.getId()==null){
             //添加
             oldAlbum=album;
             oldAlbum.setUserId(user.getId());
+            album.setStatus(1);
             album.setCreateTime(new Date());
             album.setUpdateTime(new Date());
+            album.setPublicTime(sdf.parse(album.getDateString()));
         }else {
              oldAlbum=albumService.findById(album.getId());
             if(oldAlbum==null){
                 return success(null);
             }
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
             oldAlbum.setPublicTime(sdf.parse(album.getDateString()));
             oldAlbum.setCoverImage(album.getCoverImage());
             oldAlbum.setLanguages(album.getLanguages());
@@ -118,4 +123,24 @@ public class AlbumController extends BasicController {
         }
     }
 
+
+    @RequestMapping(value = "/del")
+    @ResponseBody
+    public Object del( Integer id) {
+        User user = (User) SecurityUtils.getSubject().getPrincipal();
+        if (null == user) {
+            return "error";
+        }
+        Album oldAlbum=albumService.findById(id);
+        if(oldAlbum==null){
+            return fail("删除失败");
+        }else {
+            oldAlbum.setStatus(0);
+        }
+        if( albumService.saveOrUpdate(oldAlbum)>0){
+            return success("删除成功");
+        }else {
+            return fail("删除失败");
+        }
+    }
 }
