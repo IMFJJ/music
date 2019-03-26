@@ -123,6 +123,9 @@
             </div>
         </div>
         <div class="box none">
+            <div class="widget-title"> <span class="icon"><i class="icon-th"></i></span>
+                <button class="layui-btn layui-btn-sm layui-btn-normal" onclick="add()">添加歌曲</button>
+            </div>
             <table id="examain" lay-filter="test"></table>
         </div>
     </div>
@@ -142,7 +145,7 @@
 <script th:src="@{/js/layer.js}"></script>
 <script th:src="@{/layui/layui.js}"></script>
 <script type="text/javascript">
-    var albumId=14;
+    var albumId=$("#id").val();
     //显示状态
     layui.use(['form','laydate'], function(){
         var form = layui.form
@@ -360,7 +363,13 @@
         return fmt;
     }
 
+    //添加音乐
+    function add() {
+        window.open("/music/add?ablumId="+albumId,"_blank");
+    }
     //作品列表 end
+
+    
 </script>
 </body>
 </html>

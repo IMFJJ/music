@@ -5,6 +5,7 @@ import com.github.pagehelper.PageHelper;
 import com.study.model.MMusic;
 import com.study.service.MMusicService;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.Resource;
@@ -28,4 +29,16 @@ public class MusicController extends BasicController{
         jsonObject.put("msg", "success");
         return jsonObject;
     }
+
+    //添加音乐重定向
+    @RequestMapping("/add")
+    public String add(Integer ablumId, Model model){
+        if(ablumId==null || ablumId==0){
+            return "403";
+        }
+        model.addAttribute("ablumId",ablumId);
+        return "album/addMusic";
+    }
+
+
 }
